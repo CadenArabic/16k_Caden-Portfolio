@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Roblox Luau Developer — Portfolio</title>
+<meta name="description" content="Roblox Luau developer. Gameplay systems, economies, data persistence and anti-exploit for live Roblox games. Live visit and CCU stats.">
+<meta name="theme-color" content="#0A0E14">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Roblox Luau Developer — Portfolio">
+<meta property="og:description" content="Gameplay systems, economies and anti-exploit for live Roblox games.">
+
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='9' fill='%230A0E14'/><path d='M11 10l-4 6 4 6M21 10l4 6-4 6' stroke='%235EF39A' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round' fill='none'/></svg>">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap">
+<link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+
+<!-- ========== Icon sprite ========== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <g id="i-base" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></g>
+  </defs>
+  <symbol id="ic-spark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 3l2.1 5.4L19.5 10.5l-5.4 2.1L12 18l-2.1-5.4L4.5 10.5l5.4-2.1z"/><path d="M19 17v4M17 19h4"/>
+  </symbol>
+  <symbol id="ic-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+  </symbol>
+  <symbol id="ic-pulse" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M3 12h4l3-8 4 16 3-8h4"/>
+  </symbol>
+  <symbol id="ic-gamepad" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M6 11h4M8 9v4M15 12h.01M18 10h.01"/>
+    <rect x="2" y="6" width="20" height="12" rx="5"/>
+  </symbol>
+  <symbol id="ic-media" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="8.5" cy="9.5" r="1.6"/><path d="M3 16.5l4.5-4 4 3.5 3.5-3 6 5.5"/>
+  </symbol>
+  <symbol id="ic-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8A8.5 8.5 0 0 1 12.5 20a8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7A8.4 8.4 0 0 1 4 11.5 8.5 8.5 0 0 1 8.7 3.9a8.4 8.4 0 0 1 3.8-.9h.5A8.5 8.5 0 0 1 21 11z"/>
+  </symbol>
+  <symbol id="ic-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/>
+  </symbol>
+  <symbol id="ic-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+  </symbol>
+  <symbol id="ic-star" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 3.5l2.6 5.3 5.9.9-4.2 4.1 1 5.8-5.3-2.8-5.3 2.8 1-5.8L3.5 9.7l5.9-.9z"/>
+  </symbol>
+  <symbol id="ic-cube" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 8l-9-5-9 5 9 5 9-5z"/><path d="M3 8v8l9 5 9-5V8"/><path d="M12 13v8"/>
+  </symbol>
+  <symbol id="ic-external" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M14 4h6v6M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/>
+  </symbol>
+  <symbol id="ic-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/>
+  </symbol>
+  <symbol id="ic-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 12.5l5 5 11-11"/>
+  </symbol>
+  <symbol id="ic-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 3l9.5 16.5H2.5z"/><path d="M12 9v4.5M12 17h.01"/>
+  </symbol>
+  <symbol id="ic-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>
+  </symbol>
+  <symbol id="ic-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/>
+  </symbol>
+  <symbol id="ic-play" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M8 5.5v13a1 1 0 0 0 1.53.85l10-6.5a1 1 0 0 0 0-1.7l-10-6.5A1 1 0 0 0 8 5.5z"/>
+  </symbol>
+  <symbol id="ic-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+    <path d="M6 6l12 12M18 6L6 18"/>
+  </symbol>
+  <symbol id="ic-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M15 5l-7 7 7 7"/>
+  </symbol>
+  <symbol id="ic-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M9 5l7 7-7 7"/>
+  </symbol>
+  <symbol id="ic-arrow-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 12h15M13 6l6 6-6 6"/>
+  </symbol>
+  <symbol id="ic-discord" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M19.3 5.36A17.9 17.9 0 0 0 14.9 4l-.22.42a12.5 12.5 0 0 1 3.9 1.9 15.7 15.7 0 0 0-13.2 0 12.5 12.5 0 0 1 3.9-1.9L9.1 4a17.9 17.9 0 0 0-4.4 1.36C1.9 9.53 1.14 13.6 1.52 17.6a17.9 17.9 0 0 0 5.44 2.76l1.2-1.66a11.6 11.6 0 0 1-1.84-.89l.45-.35a12.8 12.8 0 0 0 10.9 0l.45.35a11.6 11.6 0 0 1-1.85.9l1.2 1.65a17.9 17.9 0 0 0 5.45-2.76c.45-4.63-.76-8.66-3.62-12.24zM8.6 15.16c-1.06 0-1.94-.97-1.94-2.17s.85-2.18 1.94-2.18 1.96.98 1.94 2.18c0 1.2-.86 2.17-1.94 2.17zm6.8 0c-1.07 0-1.94-.97-1.94-2.17s.85-2.18 1.94-2.18 1.95.98 1.93 2.18c0 1.2-.85 2.17-1.93 2.17z"/>
+  </symbol>
+  <symbol id="ic-x" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M17.53 3h3.02l-6.6 7.54L21.7 21h-6.07l-4.76-6.22L5.42 21H2.4l7.06-8.07L2.05 3h6.22l4.3 5.69zm-1.06 16.19h1.67L7.6 4.72H5.81z"/>
+  </symbol>
+  <symbol id="ic-envelope" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3.5 7l8.5 6 8.5-6"/>
+  </symbol>
+</svg>
+
+<!-- ========== Ambient background ========== -->
+<div class="bg" aria-hidden="true">
+  <div class="bg__aurora bg__aurora--a"></div>
+  <div class="bg__aurora bg__aurora--b"></div>
+  <div class="bg__aurora bg__aurora--c"></div>
+  <div class="bg__grid"></div>
+</div>
+
+<!-- ========== App shell ========== -->
+<div class="app">
+
+  <!-- Top bar -->
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand__mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#5EF39A" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M8 7l-4 5 4 5M16 7l4 5-4 5"/>
+        </svg>
+      </div>
+      <div class="brand__text">
+        <div class="brand__name" data-bind="name">&nbsp;</div>
+        <div class="brand__role" data-bind="role">&nbsp;</div>
+      </div>
+    </div>
+
+    <div class="topbar__spacer"></div>
+
+    <div class="livepill" id="livepill" data-state="loading" role="status" aria-live="polite">
+      <span class="livepill__dot"></span>
+      <span id="livepill-text">Connecting</span>
+    </div>
+
+    <a class="btn btn--primary btn--sm" href="#contact" data-goto="contact">
+      Hire me
+      <svg aria-hidden="true"><use href="#ic-arrow-right"/></svg>
+    </a>
+  </header>
+
+  <!-- Tabs -->
+  <nav class="tabs" aria-label="Sections">
+    <div class="tabs__track" role="tablist" id="tablist">
+      <span class="tabs__indicator" id="tab-indicator" aria-hidden="true"></span>
+
+      <button class="tab" role="tab" id="tab-welcome" data-tab="welcome" aria-controls="panel-welcome" aria-selected="true" tabindex="0">
+        <svg aria-hidden="true"><use href="#ic-spark"/></svg><span>Welcome</span>
+      </button>
+      <button class="tab" role="tab" id="tab-about" data-tab="about" aria-controls="panel-about" aria-selected="false" tabindex="-1">
+        <svg aria-hidden="true"><use href="#ic-user"/></svg><span>About</span>
+      </button>
+      <button class="tab" role="tab" id="tab-stats" data-tab="stats" aria-controls="panel-stats" aria-selected="false" tabindex="-1">
+        <svg aria-hidden="true"><use href="#ic-pulse"/></svg><span>Live Stats</span>
+      </button>
+      <button class="tab" role="tab" id="tab-games" data-tab="games" aria-controls="panel-games" aria-selected="false" tabindex="-1">
+        <svg aria-hidden="true"><use href="#ic-gamepad"/></svg><span>Games</span>
+        <span class="tab__badge" data-bind="games-count"></span>
+      </button>
+      <button class="tab" role="tab" id="tab-media" data-tab="media" aria-controls="panel-media" aria-selected="false" tabindex="-1">
+        <svg aria-hidden="true"><use href="#ic-media"/></svg><span>Media</span>
+        <span class="tab__badge" data-bind="media-count"></span>
+      </button>
+      <button class="tab" role="tab" id="tab-contact" data-tab="contact" aria-controls="panel-contact" aria-selected="false" tabindex="-1">
+        <svg aria-hidden="true"><use href="#ic-mail"/></svg><span>Contact</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Stage -->
+  <main class="stage" id="stage">
+
+    <!-- ===== Welcome ===== -->
+    <section class="panel is-active" id="panel-welcome" role="tabpanel" aria-labelledby="tab-welcome" tabindex="-1">
+      <div class="hero">
+        <div class="hero__copy stagger">
+          <div>
+            <span class="eyebrow" data-bind="role-eyebrow">Roblox Luau Developer</span>
+          </div>
+          <h1 class="hero__title" data-bind="headline">&nbsp;</h1>
+          <p class="hero__sub" data-bind="subline">&nbsp;</p>
+          <div class="hero__actions">
+            <a class="btn btn--primary" href="#contact" data-goto="contact">
+              <svg aria-hidden="true"><use href="#ic-discord"/></svg>
+              Hire me
+            </a>
+            <button class="btn btn--ghost" data-goto="games">
+              See my games
+              <svg aria-hidden="true"><use href="#ic-arrow-right"/></svg>
+            </button>
+          </div>
+          <div class="proof" id="hero-proof">
+            <div class="proof__item">
+              <div class="proof__val num" data-bind="proof-visits" data-tone="data">—</div>
+              <div class="proof__label">Total visits</div>
+            </div>
+            <div class="proof__item">
+              <div class="proof__val num" data-bind="proof-ccu" data-tone="accent">—</div>
+              <div class="proof__label">Playing now</div>
+            </div>
+            <div class="proof__item">
+              <div class="proof__val num" data-bind="proof-years">—</div>
+              <div class="proof__label">Years scripting</div>
+            </div>
+          </div>
+        </div>
+
+        <aside class="card console hero__console" aria-label="Live activity">
+          <div class="console__head">
+            <span class="console__title">Playing right now</span>
+            <span class="console__title mono" data-bind="clock">--:--</span>
+          </div>
+          <div>
+            <div class="console__big">
+              <span class="console__num num" data-bind="console-ccu">—</span>
+              <span class="console__unit">players in my games</span>
+            </div>
+          </div>
+          <div class="divider"></div>
+          <div class="bars" id="console-bars">
+            <p class="stat__note">Connecting to Roblox…</p>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ===== About ===== -->
+    <section class="panel" id="panel-about" role="tabpanel" aria-labelledby="tab-about" tabindex="-1">
+      <div class="about stagger">
+        <div class="about__col">
+          <div>
+            <span class="eyebrow">About</span>
+            <h2 class="panel__title" style="margin-top:10px">About me</h2>
+          </div>
+          <div class="about__bio" id="about-bio"></div>
+        </div>
+        <div class="about__col">
+          <h3 class="panel__title" style="font-size:17px">Stack</h3>
+          <div id="about-skills"></div>
+        </div>
+        <div class="about__col about__col--process">
+          <h3 class="panel__title" style="font-size:17px">How I work</h3>
+          <div class="process" id="about-process"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Live Stats ===== -->
+    <section class="panel" id="panel-stats" role="tabpanel" aria-labelledby="tab-stats" tabindex="-1">
+      <div class="stats" id="stats-root">
+        <div>
+          <span class="eyebrow">Updated live</span>
+          <h2 class="panel__title" style="margin-top:10px">My numbers</h2>
+          <p class="panel__lede" style="margin-top:6px">Totals from all 14 games, pulled straight from Roblox.</p>
+        </div>
+
+        <div class="stats__grid stagger">
+          <div class="card stat stat--data">
+            <div class="stat__label"><svg aria-hidden="true"><use href="#ic-eye"/></svg> Total visits</div>
+            <div class="stat__val num" data-bind="stat-visits">—</div>
+            <div class="stat__note">All time, every game</div>
+          </div>
+          <div class="card stat stat--hero">
+            <div class="stat__label"><svg aria-hidden="true"><use href="#ic-users"/></svg> Total CCU</div>
+            <div class="stat__val num" data-bind="stat-ccu">—</div>
+            <div class="stat__note">Players online right now</div>
+          </div>
+          <div class="card stat">
+            <div class="stat__label"><svg aria-hidden="true"><use href="#ic-cube"/></svg> Games</div>
+            <div class="stat__val num" data-bind="stat-games">—</div>
+            <div class="stat__note">Live and public</div>
+          </div>
+          <div class="card stat">
+            <div class="stat__label"><svg aria-hidden="true"><use href="#ic-star"/></svg> Favourites</div>
+            <div class="stat__val num" data-bind="stat-favs">—</div>
+            <div class="stat__note">Players who saved a game</div>
+          </div>
+        </div>
+
+        <div id="stats-notice"></div>
+      </div>
+    </section>
+
+    <!-- ===== Games ===== -->
+    <section class="panel" id="panel-games" role="tabpanel" aria-labelledby="tab-games" tabindex="-1">
+      <div class="section">
+        <div class="section__head">
+          <div>
+            <span class="eyebrow">Portfolio</span>
+            <h2 class="panel__title" style="margin-top:10px">Games I've worked on</h2>
+            <p class="panel__lede" style="margin-top:6px">Visits and player counts update on their own.</p>
+          </div>
+          <div class="pager" id="games-pager" hidden>
+            <button class="pager__btn" data-page="prev" aria-label="Previous games"><svg aria-hidden="true"><use href="#ic-left"/></svg></button>
+            <span class="pager__count" id="games-pager-count"></span>
+            <button class="pager__btn" data-page="next" aria-label="More games"><svg aria-hidden="true"><use href="#ic-right"/></svg></button>
+          </div>
+        </div>
+        <div class="section__body">
+          <div class="gamegrid" id="games-grid"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Media ===== -->
+    <section class="panel" id="panel-media" role="tabpanel" aria-labelledby="tab-media" tabindex="-1">
+      <div class="section">
+        <div class="section__head">
+          <div>
+            <span class="eyebrow">Media</span>
+            <h2 class="panel__title" style="margin-top:10px">Videos and screenshots</h2>
+          </div>
+          <div class="pager" id="media-pager" hidden>
+            <button class="pager__btn" data-page="prev" aria-label="Previous media"><svg aria-hidden="true"><use href="#ic-left"/></svg></button>
+            <span class="pager__count" id="media-pager-count"></span>
+            <button class="pager__btn" data-page="next" aria-label="More media"><svg aria-hidden="true"><use href="#ic-right"/></svg></button>
+          </div>
+        </div>
+        <div class="section__body">
+          <div class="mediagrid" id="media-grid"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Contact ===== -->
+    <section class="panel" id="panel-contact" role="tabpanel" aria-labelledby="tab-contact" tabindex="-1">
+      <div class="contact">
+        <div class="contact__inner stagger">
+          <div>
+            <span class="eyebrow">Contact</span>
+            <h2 class="contact__title" style="margin-top:12px">Want me on your game?</h2>
+          </div>
+          <p class="contact__lede" data-bind="contact-lede">
+            Message me on Discord with what you need. I'll tell you if I can do it and what it costs.
+          </p>
+          <div class="channels stagger" id="contact-channels"></div>
+          <p class="stat__note" data-bind="response-time"></p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Status bar -->
+  <footer class="statusbar">
+    <span class="statusbar__item" id="status-availability">
+      <svg aria-hidden="true"><use href="#ic-check"/></svg>
+      <span data-bind="availability">—</span>
+    </span>
+    <span class="statusbar__item statusbar__item--loc">
+      <svg aria-hidden="true"><use href="#ic-pin"/></svg>
+      <span data-bind="location">—</span>
+    </span>
+    <span class="statusbar__spacer"></span>
+    <span class="statusbar__item statusbar__item--hint">
+      <span class="kbd">←</span><span class="kbd">→</span> to switch tabs
+    </span>
+    <span class="statusbar__item">
+      <svg aria-hidden="true"><use href="#ic-clock"/></svg>
+      <span data-bind="updated">—</span>
+    </span>
+  </footer>
+</div>
+
+<!-- ========== Lightbox ========== -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Media viewer" hidden>
+  <div class="lightbox__stage">
+    <button class="lightbox__close" id="lightbox-close" aria-label="Close viewer"><svg aria-hidden="true"><use href="#ic-close"/></svg></button>
+    <button class="lightbox__nav lightbox__nav--prev" id="lightbox-prev" aria-label="Previous"><svg aria-hidden="true"><use href="#ic-left"/></svg></button>
+    <button class="lightbox__nav lightbox__nav--next" id="lightbox-next" aria-label="Next"><svg aria-hidden="true"><use href="#ic-right"/></svg></button>
+    <div class="lightbox__frame" id="lightbox-frame"></div>
+    <div class="lightbox__meta">
+      <div>
+        <div class="lightbox__title" id="lightbox-title"></div>
+        <div class="lightbox__caption" id="lightbox-caption"></div>
+      </div>
+      <div class="pager__count mono" id="lightbox-count"></div>
+    </div>
+  </div>
+</div>
+
+<div class="toasts" id="toasts" aria-live="polite" aria-atomic="true"></div>
+
+<script src="assets/js/config.js"></script>
+<script src="assets/js/roblox.js"></script>
+<script src="assets/js/app.js"></script>
+</body>
+</html>

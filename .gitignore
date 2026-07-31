@@ -1,0 +1,17 @@
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Local tooling (not part of the site)
+.claude/
+.vscode/
+.idea/
+
+# Vercel
+.vercel/
+
+# Node — unused, but keeps stray installs out of the repo
+node_modules/
+npm-debug.log*
+yarn-error.log*
