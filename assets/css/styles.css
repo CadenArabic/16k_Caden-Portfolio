@@ -601,6 +601,11 @@ a { color: inherit; text-decoration: none; }
 .game__link { display: inline-flex; align-items: center; gap: 5px; color: var(--text-3); transition: color var(--t) var(--ease); }
 .game__link:hover { color: var(--data); }
 .game__link svg { width: 13px; height: 13px; }
+.game__closed { color: var(--text-3); opacity: .8; }
+.game__does {
+  font-size: 11.5px; line-height: 1.4; color: var(--text-2);
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
 
 /* ---------- 14. Media ---------------------------------------------------- */
 .mediagrid {
@@ -696,6 +701,18 @@ a { color: inherit; text-decoration: none; }
 .channel__label { font-size: 11px; color: var(--text-3); letter-spacing: .08em; text-transform: uppercase; font-family: var(--f-mono); }
 .channel__val { font-size: 14px; font-weight: 500; letter-spacing: -.01em; overflow: hidden; text-overflow: ellipsis; }
 .channel__hint { font-size: 11px; color: var(--text-3); margin-top: 1px; }
+
+.pricing { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-3); width: 100%; }
+.price {
+  padding: var(--s-3) var(--s-4); border-radius: var(--r); text-align: left;
+  border: 1px solid var(--border); background: var(--surface);
+}
+.price--featured { border-color: rgb(94 243 154 / .38); box-shadow: var(--glow-accent); }
+.price__name { font-size: 11px; color: var(--text-3); letter-spacing: .08em; text-transform: uppercase; font-family: var(--f-mono); }
+.price__val { font-family: var(--f-display); font-weight: 700; font-size: 22px; letter-spacing: -.02em; line-height: 1.2; margin-top: 2px; }
+.price--featured .price__val { color: var(--accent); }
+.price__per { font-family: var(--f-body); font-weight: 500; font-size: 12px; color: var(--text-3); margin-left: 4px; letter-spacing: 0; }
+.price__text { font-size: 12px; color: var(--text-2); margin-top: 2px; line-height: 1.4; }
 
 /* ---------- 16. Status bar ---------------------------------------------- */
 .statusbar {
@@ -837,6 +854,21 @@ a { color: inherit; text-decoration: none; }
   .game__body { padding: 8px 10px; justify-content: center; }
   .game__ccu { left: 5px; bottom: 5px; font-size: 10px; padding: 2px 6px; }
   .game__meta { margin-top: 4px; padding-top: 0; }
+  .game__does { -webkit-line-clamp: 1; font-size: 11px; }
+  .game__role { display: none; }
+
+  .pricing { gap: var(--s-2); }
+  .price { padding: 8px 10px; }
+  .price__val { font-size: 17px; }
+  .price__per { display: block; margin-left: 0; font-size: 10.5px; }
+  .price__text { display: none; }
+  .channels { grid-template-columns: 1fr 1fr; gap: var(--s-2); }
+  .channel { padding: 10px; gap: var(--s-2); }
+  .channel__icon { width: 30px; height: 30px; border-radius: 8px; }
+  .channel__icon svg { width: 15px; height: 15px; }
+  .channel__val { font-size: 12.5px; white-space: nowrap; }
+  .channel__label { font-size: 10px; }
+  .channel__hint { display: none; }
 
   /* Skill pills become a delimited list — same words, a third of the height.
      This is what lets the About panel nearly fit a phone screen. */
@@ -942,6 +974,10 @@ a { color: inherit; text-decoration: none; }
   .contact__title { font-size: 22px; }
   .contact__lede { font-size: 13px; }
   .channel { padding: 10px 12px; }
+  .channel__hint { display: none; }
+  .price { padding: 6px 10px; }
+  .price__val { font-size: 16px; }
+  .price__text { display: none; }
 
   .about__bio p { font-size: 12.5px; }
   .step { padding: 7px 10px; }

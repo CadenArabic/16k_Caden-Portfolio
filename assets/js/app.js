@@ -19,15 +19,8 @@
      Formatting
      =================================================================== */
 
-  function compact(n) {
-    if (n === null || n === undefined || isNaN(n)) return "—";
-    if (n >= 1e9) return (n / 1e9).toFixed(n >= 1e10 ? 0 : 1).replace(/\.0$/, "") + "B";
-    if (n >= 1e6) return (n / 1e6).toFixed(n >= 1e7 ? 0 : 1).replace(/\.0$/, "") + "M";
-    if (n >= 1e4) return (n / 1e3).toFixed(0) + "K";
-    if (n >= 1e3) return (n / 1e3).toFixed(1).replace(/\.0$/, "") + "K";
-    return String(n);
-  }
-  const full = (n) => (n === null || n === undefined || isNaN(n) ? "—" : n.toLocaleString());
+  const R = window.Render;
+  const { compact, full, esc, icon } = R;
 
   function relTime(ts) {
     const s = Math.floor((Date.now() - ts) / 1000);
@@ -52,24 +45,20 @@
     requestAnimationFrame(frame);
   }
 
-  const icon = (id, cls) =>
-    `<svg class="${cls || ""}" aria-hidden="true"><use href="#${id}"/></svg>`;
-
-  const esc = (s) =>
-    String(s == null ? "" : s).replace(/[&<>"']/g, (c) =>
-      ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-
   /* ======================================================================
      Static content from config
      =================================================================== */
 
+  const vars = () => R.tokens(C, state.stats && state.stats.totals);
+
   function renderIdentity() {
     const id = C.identity;
+    const v = vars();
     bind("name").forEach((el) => (el.textContent = id.name));
     bind("role").forEach((el) => (el.textContent = id.role));
     bind("role-eyebrow").forEach((el) => (el.textContent = id.role));
-    bind("headline").forEach((el) => (el.innerHTML = emphasise(id.headline)));
-    bind("subline").forEach((el) => (el.textContent = id.subline));
+    bind("headline").forEach((el) => (el.innerHTML = R.emphasise(R.fill(id.headline, v))));
+    bind("subline").forEach((el) => (el.textContent = R.fill(id.subline, v)));
     bind("location").forEach((el) => (el.textContent = id.location));
     bind("proof-years").forEach((el) => (el.textContent = id.yearsExperience + "+"));
     bind("response-time").forEach((el) => (el.textContent = C.contact.responseTime || ""));
@@ -83,65 +72,18 @@
     document.title = `${id.name} — ${id.role}`;
   }
 
-  /* Anything wrapped in *asterisks* in the headline gets the gradient.
-     You choose what the emphasis lands on, not an algorithm. */
-  function emphasise(text) {
-    return esc(text).replace(/\*(.+?)\*/g, "<em>$1</em>");
-  }
-
   function renderAbout() {
-    const bio = $("#about-bio");
-    bio.innerHTML = C.about.bio.map((p) => `<p>${esc(p)}</p>`).join("");
-
-    $("#about-skills").innerHTML = C.about.skills.map((g) => `
-      <div class="skillgroup">
-        <div class="skillgroup__label">${esc(g.label)}</div>
-        <div class="chips">${g.items.map((i) => `<span class="chip">${esc(i)}</span>`).join("")}</div>
-      </div>`).join("");
-
-    $("#about-process").innerHTML = C.about.process.map((s) => `
-      <div class="step">
-        <div class="step__n mono">${esc(s.n)}</div>
-        <div>
-          <div class="step__title">${esc(s.title)}</div>
-          <div class="step__text">${esc(s.text)}</div>
-        </div>
-      </div>`).join("");
+    $("#about-bio").innerHTML = R.bio(C.about.bio, vars());
+    $("#about-skills").innerHTML = R.skills(C.about.skills);
+    $("#about-process").innerHTML = R.process(C.about.process);
   }
 
   function renderContact() {
     const c = C.contact;
-    const items = [];
-
-    if (c.discord) items.push({
-      icon: "ic-discord", label: "Discord", value: c.discord,
-      hint: "Click to copy", action: "copy",
-    });
-    if (c.discordServer) items.push({
-      icon: "ic-discord", label: "Server", value: "Join my server",
-      hint: c.discordServer.replace(/^https?:\/\//, ""), href: c.discordServer,
-    });
-    if (c.x) items.push({
-      icon: "ic-x", label: "X / Twitter", value: "@" + c.x,
-      hint: "DMs open", href: "https://x.com/" + encodeURIComponent(c.x),
-    });
-    if (c.email) items.push({
-      icon: "ic-envelope", label: "Email", value: c.email,
-      hint: "For longer briefs", href: "mailto:" + c.email,
-    });
-
-    $("#contact-channels").innerHTML = items.map((it) => {
-      const inner = `
-        <span class="channel__icon">${icon(it.icon)}</span>
-        <span style="min-width:0">
-          <span class="channel__label">${esc(it.label)}</span>
-          <span class="channel__val" style="display:block">${esc(it.value)}</span>
-          <span class="channel__hint">${esc(it.hint)}</span>
-        </span>`;
-      return it.href
-        ? `<a class="channel" href="${esc(it.href)}" target="_blank" rel="noopener noreferrer">${inner}</a>`
-        : `<button class="channel" data-copy="${esc(it.value)}">${inner}</button>`;
-    }).join("");
+    bind("contact-lede").forEach((el) => (el.textContent = c.lede || el.textContent));
+    const pricing = $("#contact-pricing");
+    if (pricing) pricing.innerHTML = R.pricing(C.pricing);
+    $("#contact-channels").innerHTML = R.channels(R.channelItems(c));
 
     $$("#contact-channels [data-copy]").forEach((btn) => {
       btn.addEventListener("click", () => copyText(btn.dataset.copy));
@@ -352,50 +294,14 @@
     }
 
     // Merge live data onto the configured order.
-    const live = (state.stats && state.stats.games) || [];
-    const byId = {};
-    live.forEach((g) => (byId[g.universeId] = g));
+    const rows = R.gameRows(C, state.stats && state.stats.games);
 
-    const rows = configured.map((cfg, i) => {
-      const l = byId[cfg.universeId] || {};
-      const fb = cfg.fallback || {};
-      return {
-        name: l.name || fb.name || "Game " + (i + 1),
-        visits: l.visits != null ? l.visits : fb.visits,
-        playing: l.playing != null ? l.playing : fb.playing,
-        thumb: l.thumb || cfg.thumb || null,
-        role: cfg.role || "",
-        contribution: cfg.contribution || "",
-        url: l.rootPlaceId
-          ? "https://www.roblox.com/games/" + l.rootPlaceId
-          : (cfg.universeId ? "https://www.roblox.com/games/refer?PlaceId=" + cfg.universeId : null),
-      };
-    });
-
-    const size = pageSizeFor(grid, state.gameCardH || 214, state.gamesPenalty);
+    const size = pageSizeFor(grid, state.gameCardH || 236, state.gamesPenalty);
     const pages = Math.ceil(rows.length / size);
     state.gamesPage = Math.min(state.gamesPage, Math.max(0, pages - 1));
     const slice = rows.slice(state.gamesPage * size, state.gamesPage * size + size);
 
-    grid.innerHTML = slice.map((g, i) => `
-      <article class="card game pop-in" style="--i:${i}">
-        <div class="game__thumb">
-          ${g.thumb
-            ? `<img src="${esc(g.thumb)}" alt="${esc(g.name)} thumbnail" loading="lazy" width="768" height="432">`
-            : `<div class="thumb-fallback">${icon("ic-cube")}</div>`}
-          ${g.playing != null ? `<span class="game__ccu"><i></i>${compact(g.playing)} playing</span>` : ""}
-        </div>
-        <div class="game__body">
-          <h3 class="game__name" title="${esc(g.name)}">${esc(g.name)}</h3>
-          ${g.role ? `<div class="game__role">${esc(g.role)}</div>` : ""}
-          ${g.contribution ? `<p class="stat__note" style="font-size:12px">${esc(g.contribution)}</p>` : ""}
-          <div class="game__meta">
-            <span>${compact(g.visits)} visits</span>
-            ${g.url ? `<a class="game__link" href="${esc(g.url)}" target="_blank" rel="noopener noreferrer"
-                         style="margin-left:auto">Play ${icon("ic-external")}</a>` : ""}
-          </div>
-        </div>
-      </article>`).join("");
+    grid.innerHTML = slice.map(R.gameCard).join("");
 
     if (reconcileCardHeight(grid, ".game", "gameCardH", pass)) return renderGames(1);
     if (pass < 3 && slice.length > 1 && overflows("panel-games")) {
@@ -574,6 +480,8 @@
   function paintStats(result, firstPaint) {
     state.stats = result;
     const t = result.totals;
+    renderIdentity();
+    $("#about-bio").innerHTML = R.bio(C.about.bio, vars());
 
     $("#stats-root").classList.remove("is-loading");
     setPill(result.status);
@@ -621,19 +529,7 @@
   function paintBars(games) {
     const wrap = $("#console-bars");
     if (!wrap) return;
-    const top = games.filter((g) => g.visits > 0).sort((a, b) => b.visits - a.visits).slice(0, 3);
-
-    if (!top.length) {
-      wrap.innerHTML = `<p class="stat__note">No games added yet.</p>`;
-      return;
-    }
-    const max = top[0].visits || 1;
-    wrap.innerHTML = top.map((g) => `
-      <div class="bar__row">
-        <span class="bar__name" title="${esc(g.name)}">${esc(g.name)}</span>
-        <span class="bar__val">${compact(g.visits)}</span>
-        <span class="bar__track"><span class="bar__fill" data-w="${Math.round((g.visits / max) * 100)}"></span></span>
-      </div>`).join("");
+    wrap.innerHTML = R.bars(games);
 
     $$("#console-bars .bar__fill").forEach((f) => {
       void f.offsetWidth;                    // flush the 0-width start state

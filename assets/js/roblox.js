@@ -58,8 +58,20 @@ window.RobloxStats = (function () {
     } catch (_) { /* private mode — not fatal */ }
   }
 
+  /* The numbers tools/prerender.mjs saved last time it ran, limited to the
+     games still in config. Better than nothing when Roblox can't be reached. */
+  function fromSnapshot() {
+    const snap = window.SNAPSHOT;
+    if (!snap || !Array.isArray(snap.games)) return null;
+    const ids = new Set(configuredIds());
+    const games = snap.games.filter((g) => ids.has(g.universeId));
+    return games.length ? games : null;
+  }
+
   /* Build the shape the UI consumes, from config alone. */
   function fromFallback() {
+    const snap = fromSnapshot();
+    if (snap) return snap;
     return (window.CONFIG.games || []).map((g, i) => ({
       universeId: g.universeId || -(i + 1),
       rootPlaceId: null,
@@ -73,7 +85,14 @@ window.RobloxStats = (function () {
 
   /* ---- network --------------------------------------------------------- */
 
+  /* Roblox caps both endpoints at 50 universe IDs per request. */
   async function fetchFromHost(host, ids) {
+    const parts = [];
+    for (let i = 0; i < ids.length; i += 50) parts.push(fetchChunk(host, ids.slice(i, i + 50)));
+    return (await Promise.all(parts)).flat();
+  }
+
+  async function fetchChunk(host, ids) {
     const idParam = ids.join(",");
 
     const details = await fetchJSON(`${host.games}/v1/games?universeIds=${idParam}`);
@@ -152,11 +171,13 @@ window.RobloxStats = (function () {
     );
   }
 
-  /* Read the instantly-available cache so the first paint isn't a dash. */
+  /* Read the instantly-available cache (or the saved snapshot on a first
+     visit) so the first paint isn't a dash. */
   function peekCache() {
     const cached = readCache();
-    if (!cached || !cached.games || !cached.games.length) return null;
-    return { games: cached.games, totals: totalsOf(cached.games), status: "cached" };
+    const games = (cached && cached.games && cached.games.length) ? cached.games : fromSnapshot();
+    if (!games) return null;
+    return { games, totals: totalsOf(games), status: "cached" };
   }
 
   return { load, peekCache };

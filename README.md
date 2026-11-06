@@ -1,10 +1,11 @@
-# Roblox Luau Developer — Portfolio
+# Fullstack Roblox Developer — Portfolio
 
 A single-screen, tab-based portfolio. Nothing scrolls: six tabs (Welcome, About,
 Live Stats, Games, Media, Contact) swap in place, and visit/CCU numbers are
 pulled live from Roblox.
 
-Plain HTML, CSS and JavaScript. No build step, no dependencies, no npm install.
+Plain HTML, CSS and JavaScript. No dependencies, no npm install. One optional
+Node script (`tools/prerender.mjs`) bakes the content into `index.html`.
 
 ---
 
@@ -23,58 +24,73 @@ Then open <http://localhost:4321>.
 
 ## Everything you edit is in one file
 
-`assets/js/config.js`. Nothing else needs touching. It has six sections:
+`assets/js/config.js`. Nothing else needs touching. It has seven sections:
 
 | Section | What it controls |
 |---|---|
-| `identity` | Your name, role, headline, availability, years of experience |
-| `contact` | Discord, X, optional email — feeds every CTA on the site |
+| `identity` | Your name, role, headline, meta description, availability, years of experience |
+| `contact` | Discord, X, Talent Hub, Roblox profile, optional email — feeds every CTA on the site |
+| `pricing` | The monthly price cards on the Contact tab |
 | `about` | Bio paragraphs, skill groups, your 3-step process |
-| `games` | Universe IDs — this is what makes the live stats work |
+| `games` | Universe IDs, place IDs, your role and what you built on each |
 | `media` | Your videos and screenshots |
-| `api` | Refresh rate and cache |
 | `api` | Refresh rate and cache. You shouldn't need to change it. |
+
+**After every edit, run the prerender** (next section) so the page source matches.
 
 ### The headline
 
 Whatever you wrap in `*asterisks*` gets the green-to-cyan gradient:
 
 ```js
-headline: "I build Roblox systems that ship — *and survive live players.*",
+headline: "One developer for your *whole Roblox game.*",
 ```
+
+`{games}`, `{visits}` and `{years}` in the headline, subline, description or bio
+are filled in for you: the number of games, their combined visits ("22M+"), and
+`yearsExperience`. No more hand-updating "14 of them are live".
+
+---
+
+## Prerender (do this after editing config.js)
+
+```bash
+node tools/prerender.mjs
+```
+
+The site builds itself with JavaScript, so anything that reads the raw HTML —
+portfolio raters like Rohire, search engines, Discord and X link previews — used
+to see empty boxes. This script runs the same rendering code (`assets/js/render.js`)
+in Node, pulls the current numbers from Roblox, and writes the finished markup
+between the `<!--pre:name-->` markers in `index.html`. It also saves those
+numbers to `assets/js/snapshot.js`, which the site shows instantly on a first
+visit and falls back to if Roblox can't be reached. Commit both files.
 
 ---
 
 ## Games
 
-Your 14 games are already in `config.js`. Visits, CCU, favourites, the name, the
-thumbnail and the play link are all fetched live — the only thing written by hand
-is `role`, which is set to "Scripter" everywhere. Change any that are wrong:
+Your games are in `config.js`, biggest first. Visits, CCU, favourites, the name
+and the thumbnail are fetched live. You write `role` and `contribution` (one line
+on what you built — this is the proof clients and raters look for):
 
 ```js
-{ universeId: 10023401715, role: "Lead Scripter" },
+{ universeId: 10023401715, placeId: 121627323638824, role: "Scripter",
+  contribution: "Bow combat, lucky block rolls, damage and luck upgrades, rebirths." },
 ```
 
-You can also add `contribution` (one line under the title) and `fallback`
-(numbers shown if Roblox is unreachable):
+`placeId` keeps the Play link working even when Roblox is unreachable. A game
+that went private gets `closed: true`: it keeps its visits but shows "Closed"
+instead of a Play link.
 
-```js
-{
-  universeId: 10023401715,
-  role: "Lead Scripter",
-  contribution: "Economy and anti-exploit.",
-  fallback: { name: "Bow for Lucky Blocks", visits: 75000, playing: 0 },
-},
-```
+The list holds every game from your groups with 10K+ visits or 1+ playing.
 
 ### Adding a new game
 
 The Universe ID is in the game's URL on the Roblox site — the `universeId=`
 parameter. Or open your game → **Configure** and read it from
-`.../universes/configure?id=XXXXXXXXX`. It is not the place ID.
-
-The headline in `config.js` says "14 of them are live" — update that number when
-you add one.
+`.../universes/configure?id=XXXXXXXXX`. The place ID is the number in the
+normal game link (`roblox.com/games/<placeId>`). Then run the prerender.
 
 ---
 
@@ -154,11 +170,10 @@ how many cards fit, so a page never overflows and never wastes a row:
 
 | Screen | Games per page |
 |---|---|
-| 1440×900 | all 14, no pager |
-| 1280×800 | 12 |
-| 1024×768 | 10 |
-| 768×1024 | 9 |
-| 390×844 | 5, as horizontal rows |
+| 1440×900 | 14 |
+| 375×812 | 4, as horizontal rows |
+
+Other sizes fit as many as the screen holds; the pager covers the rest.
 
 ### One exception
 
@@ -174,10 +189,13 @@ couple of `about.skills` items in `config.js`.
 ## Layout
 
 ```
-index.html                 markup + inline SVG icon sprite
+index.html                 markup + inline SVG icon sprite (+ prerendered content)
 assets/css/styles.css      design tokens, layout, animation
 assets/js/config.js        ← the only file you edit
+assets/js/render.js        markup for bio, skills, games, pricing, contact (browser + Node)
+assets/js/snapshot.js      last numbers saved by the prerender
 assets/js/roblox.js        live stats fetching, caching, fallbacks
-assets/js/app.js           tabs, routing, rendering, lightbox
+assets/js/app.js           tabs, routing, paging, live stats, lightbox
 assets/media/              your images and videos
+tools/prerender.mjs        bakes content into index.html (node tools/prerender.mjs)
 ```
