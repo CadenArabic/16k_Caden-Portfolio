@@ -113,7 +113,7 @@ function attr(selector, value) {
   html = html.replace(selector, (m, before, after) => before + R.esc(value) + after);
 }
 
-const title = `${id.name} — ${id.role}`;
+const title = `${id.name} | ${id.role}`;
 const description = R.fill(id.description || id.subline, vars);
 html = html.replace(/<title>[\s\S]*?<\/title>/, `<title>${R.esc(title)}</title>`);
 attr(/(<meta name="description" content=")[^"]*(")/, description);
@@ -122,29 +122,29 @@ attr(/(<meta property="og:description" content=")[^"]*(")/, description);
 
 bindTo("name", R.esc(id.name));
 bindTo("role", R.esc(id.role));
-bindTo("role-eyebrow", R.esc(id.role));
 bindTo("headline", R.emphasise(R.fill(id.headline, vars)));
 bindTo("subline", R.esc(R.fill(id.subline, vars)));
 bindTo("location", R.esc(id.location));
 bindTo("availability", R.esc(id.available ? id.availableText : id.unavailableText));
-bindTo("proof-visits", R.compact(totals.visits));
-bindTo("proof-ccu", R.compact(totals.playing));
-bindTo("proof-years", id.yearsExperience + "+");
-bindTo("console-ccu", R.compact(totals.playing));
-bindTo("stat-visits", R.full(totals.visits));
+bindTo("stat-visits", R.short(totals.visits));
 bindTo("stat-ccu", R.full(totals.playing));
-bindTo("stat-games", String(totals.count));
-bindTo("stat-favs", R.full(totals.favorites));
+bindTo("stat-favs", R.short(totals.favorites));
+bindTo("stat-games", String(C.games.length));
+bindTo("proof-years", id.yearsExperience + "+");
 bindTo("games-count", String(C.games.length));
-bindTo("media-count", String((C.media || []).length));
 bindTo("response-time", R.esc(C.contact.responseTime || ""));
 bindTo("contact-lede", R.esc(C.contact.lede || ""));
 
+/* Same slices as app.js: 4 cards in the hero deck, 5 in the bento, the rest in the grid. */
+const rows = R.gameRows(C, games);
+region("swap", rows.filter((g) => g.thumb).slice(0, 4).map(R.swapCard).join(""));
+region("loop", rows.filter((g) => g.thumb).map(R.loopItem).join(""));
+region("featured", rows.slice(0, 5).map(R.featuredCard).join(""));
+region("games", rows.slice(5).map(R.gameCard).join(""));
 region("bio", R.bio(C.about.bio, vars));
 region("skills", R.skills(C.about.skills));
 region("process", R.process(C.about.process));
-region("games", R.gameRows(C, games).map(R.gameCard).join(""));
-region("bars", R.bars(games));
+region("media", R.media(C.media));
 region("pricing", R.pricing(C.pricing));
 region("channels", R.channels(R.channelItems(C.contact)));
 

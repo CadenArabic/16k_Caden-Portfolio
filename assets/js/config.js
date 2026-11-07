@@ -24,7 +24,7 @@ window.CONFIG = {
     available: true,
     availableText:   "Open for work",
     unavailableText: "Booked",
-    location:  "GMT+1 · remote",
+    location:  "GMT+1, remote",
     yearsExperience: 4,
   },
 
@@ -39,7 +39,7 @@ window.CONFIG = {
     talentHub:     { label: "16k_Caden", url: "https://create.roblox.com/talent/creators/867951875" },
     roblox:        { label: "@16k_Caden", url: "https://www.roblox.com/users/867951875/profile" },
     email:         "",                          // leave "" to hide
-    responseTime:  "I usually reply within a few hours. 5–8 hours a day, 4–6 days a week.",
+    responseTime:  "I usually reply within a few hours. I work 5-8 hours a day, 4-6 days a week.",
   },
 
   /* ---------------------------------------------------------------------
@@ -75,7 +75,7 @@ window.CONFIG = {
     ],
     process: [
       { n: "01", title: "Scope", text: "We agree on the features, the deadline and the monthly price before I start." },
-      { n: "02", title: "Build", text: "I work in your place 5–8 hours a day and post progress clips on Discord." },
+      { n: "02", title: "Build", text: "I work in your place 5-8 hours a day and post progress clips on Discord." },
       { n: "03", title: "Ship",  text: "I test for exploits, data loss and mobile, then hand over clean, organized code." },
     ],
   },

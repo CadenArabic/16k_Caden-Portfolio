@@ -1,385 +1,225 @@
 /* ============================================================================
-   app.js — tab shell, rendering, live stats binding, lightbox.
-   No framework, no build step.
+   app.js — renders the page from config.js, keeps the live numbers fresh,
+   and switches on the effects in effects.js. No framework, no build step.
    ========================================================================= */
 
 (function () {
   "use strict";
 
   const C = window.CONFIG;
+  const R = window.Render;
+  const FX = window.Effects;
   const $  = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
   const bind = (key) => $$(`[data-bind="${key}"]`);
-  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const setBind = (key, text) => bind(key).forEach((el) => (el.textContent = text));
 
-  const TABS = ["welcome", "about", "stats", "games", "media", "contact"];
-  let state = { tab: "welcome", stats: null, gamesPage: 0, mediaPage: 0 };
+  const FEATURED = 5;
+  const SWAP_CARDS = 4;
+  let stats = null;
+  let statsSeen = false;
+  let lastUpdate = 0;
 
-  /* ======================================================================
-     Formatting
-     =================================================================== */
-
-  const R = window.Render;
-  const { compact, full, esc, icon } = R;
-
-  function relTime(ts) {
-    const s = Math.floor((Date.now() - ts) / 1000);
-    if (s < 10) return "just now";
-    if (s < 60) return s + "s ago";
-    if (s < 3600) return Math.floor(s / 60) + "m ago";
-    return Math.floor(s / 3600) + "h ago";
-  }
-
-  /* Count-up. Never animates on reduced-motion. */
-  function countTo(el, target, format) {
-    if (!el) return;
-    const fmt = format || compact;
-    if (reduceMotion || !target) { el.textContent = fmt(target); return; }
-    const from = 0, dur = 850, t0 = performance.now();
-    function frame(now) {
-      const p = Math.min(1, (now - t0) / dur);
-      const eased = 1 - Math.pow(1 - p, 3);           // ease-out cubic
-      el.textContent = fmt(Math.round(from + (target - from) * eased));
-      if (p < 1) requestAnimationFrame(frame);
-    }
-    requestAnimationFrame(frame);
-  }
+  const vars = () => R.tokens(C, stats && stats.totals);
+  const rows = () => R.gameRows(C, stats && stats.games);
 
   /* ======================================================================
-     Static content from config
+     Static content (the same markup tools/prerender.mjs bakes in)
      =================================================================== */
-
-  const vars = () => R.tokens(C, state.stats && state.stats.totals);
 
   function renderIdentity() {
     const id = C.identity;
     const v = vars();
-    bind("name").forEach((el) => (el.textContent = id.name));
-    bind("role").forEach((el) => (el.textContent = id.role));
-    bind("role-eyebrow").forEach((el) => (el.textContent = id.role));
-    bind("headline").forEach((el) => (el.innerHTML = R.emphasise(R.fill(id.headline, v))));
-    bind("subline").forEach((el) => (el.textContent = R.fill(id.subline, v)));
-    bind("location").forEach((el) => (el.textContent = id.location));
-    bind("proof-years").forEach((el) => (el.textContent = id.yearsExperience + "+"));
-    bind("response-time").forEach((el) => (el.textContent = C.contact.responseTime || ""));
-
-    const availEl = $("#status-availability");
-    bind("availability").forEach((el) => {
-      el.textContent = id.available ? id.availableText : id.unavailableText;
-    });
-    if (availEl) availEl.style.color = id.available ? "var(--accent)" : "var(--warn)";
-
-    document.title = `${id.name} — ${id.role}`;
+    setBind("name", id.name);
+    setBind("role", id.role);
+    setBind("location", id.location);
+    setBind("availability", id.available ? id.availableText : id.unavailableText);
+    setBind("subline", R.fill(id.subline, v));
+    setBind("response-time", C.contact.responseTime || "");
+    setBind("contact-lede", C.contact.lede || "");
+    setBind("games-count", String((C.games || []).length));
+    const head = $("#headline");
+    if (head && !head.dataset.blurred) head.innerHTML = R.emphasise(R.fill(id.headline, v));
+    document.title = `${id.name} | ${id.role}`;
   }
 
-  function renderAbout() {
+  function renderStatic() {
     $("#about-bio").innerHTML = R.bio(C.about.bio, vars());
     $("#about-skills").innerHTML = R.skills(C.about.skills);
     $("#about-process").innerHTML = R.process(C.about.process);
+    $("#media-grid").innerHTML = R.media(C.media);
+    $("#contact-pricing").innerHTML = R.pricing(C.pricing);
+    $("#contact-channels").innerHTML = R.channels(R.channelItems(C.contact));
   }
 
-  function renderContact() {
-    const c = C.contact;
-    bind("contact-lede").forEach((el) => (el.textContent = c.lede || el.textContent));
-    const pricing = $("#contact-pricing");
-    if (pricing) pricing.innerHTML = R.pricing(C.pricing);
-    $("#contact-channels").innerHTML = R.channels(R.channelItems(c));
-
-    $$("#contact-channels [data-copy]").forEach((btn) => {
-      btn.addEventListener("click", () => copyText(btn.dataset.copy));
-    });
+  function renderGames() {
+    const all = rows();
+    $("#swap").innerHTML = all.filter((g) => g.thumb).slice(0, SWAP_CARDS).map(R.swapCard).join("");
+    $("#games-featured").innerHTML = all.slice(0, FEATURED).map(R.featuredCard).join("");
+    $("#games-grid").innerHTML = all.slice(FEATURED).map(R.gameCard).join("");
+    $("#loop").innerHTML = all.filter((g) => g.thumb).map(R.loopItem).join("");
   }
 
-  async function copyText(text) {
-    try {
-      await navigator.clipboard.writeText(text);
-      toast(`Copied ${text}`);
-    } catch (_) {
-      toast("Copy failed — select it manually");
-    }
-  }
-
-  /* ======================================================================
-     Tabs
-     =================================================================== */
-
-  function moveIndicator() {
-    const ind = $("#tab-indicator");
-    const active = $(`.tab[aria-selected="true"]`);
-    if (!ind || !active || getComputedStyle(ind).display === "none") return;
-    ind.style.width = active.offsetWidth + "px";
-    ind.style.transform = `translateX(${active.offsetLeft}px)`;
-  }
-
-  function setTab(name, opts = {}) {
-    if (!TABS.includes(name)) name = "welcome";
-
-    // Travel direction decides which way panels slide.
-    const from = TABS.indexOf(state.tab);
-    const to = TABS.indexOf(name);
-    const dir = to === from ? 0 : (to > from ? 1 : -1);
-    const shift = 40;
-    state.tab = name;
-
-    $$(".tab").forEach((t) => {
-      const on = t.dataset.tab === name;
-      t.setAttribute("aria-selected", on ? "true" : "false");
-      t.tabIndex = on ? 0 : -1;
-    });
-
-    const incoming = $("#panel-" + name);
-    const outgoing = $(".panel.is-active");
-    if (outgoing && outgoing !== incoming) {
-      outgoing.style.setProperty("--x", (-dir * shift) + "px");
-      outgoing.classList.remove("is-active");
-    }
-    if (!incoming.classList.contains("is-active")) {
-      incoming.style.setProperty("--x", (dir * shift) + "px");
-      void incoming.offsetWidth;        // flush the start position
-      incoming.classList.add("is-active");
-    }
-
-    moveIndicator();
-    if (history.replaceState) history.replaceState(null, "", "#" + name);
-
-    // Re-layout paged grids: the panel had zero size while hidden.
-    if (name === "games") renderGames();
-    if (name === "media") renderMedia();
-
-    if (opts.focusPanel) $("#panel-" + name).focus({ preventScroll: true });
-  }
-
-  function initTabs() {
-    const list = $("#tablist");
-
-    list.addEventListener("click", (e) => {
-      const tab = e.target.closest(".tab");
-      if (tab) setTab(tab.dataset.tab);
-    });
-
-    // Roving tabindex + arrow keys (WAI-ARIA tabs pattern)
-    list.addEventListener("keydown", (e) => {
-      const i = TABS.indexOf(state.tab);
-      let next = null;
-      if (e.key === "ArrowRight") next = TABS[(i + 1) % TABS.length];
-      if (e.key === "ArrowLeft")  next = TABS[(i - 1 + TABS.length) % TABS.length];
-      if (e.key === "Home")       next = TABS[0];
-      if (e.key === "End")        next = TABS[TABS.length - 1];
-      if (next) {
-        e.preventDefault();
-        setTab(next);
-        $(`#tab-${next}`).focus();
-      }
-    });
-
-    // Global arrows too — but never while typing or with a modal open.
-    document.addEventListener("keydown", (e) => {
-      if ($("#lightbox").classList.contains("is-open")) return;
-      if (/^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName)) return;
-      if (e.metaKey || e.ctrlKey || e.altKey) return;
-      const i = TABS.indexOf(state.tab);
-      if (e.key === "ArrowRight") { e.preventDefault(); setTab(TABS[(i + 1) % TABS.length]); }
-      if (e.key === "ArrowLeft")  { e.preventDefault(); setTab(TABS[(i - 1 + TABS.length) % TABS.length]); }
-    });
-
-    // Any element with data-goto jumps to a tab.
-    document.addEventListener("click", (e) => {
-      const go = e.target.closest("[data-goto]");
-      if (go) { e.preventDefault(); setTab(go.dataset.goto, { focusPanel: true }); }
-    });
-
-    window.addEventListener("hashchange", () => setTab(location.hash.replace("#", "")));
-    window.addEventListener("resize", debounce(() => {
-      // A new viewport gets a fresh fit: clear the measured heights and the
-      // row penalties so grids can grow again, not just shrink.
-      state.gameCardH = state.mediaCardH = 0;
-      state.gamesPenalty = state.mediaPenalty = 0;
-      moveIndicator(); renderGames(); renderMedia();
-    }, 150));
-
-    setTab(location.hash.replace("#", "") || "welcome");
-    // Fonts change tab widths — reposition once they land.
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(moveIndicator);
-  }
-
-  /* ======================================================================
-     Paging — keeps every tab on one screen, no scrollbars
-     =================================================================== */
-
-  function columnsOf(grid) {
-    const cols = getComputedStyle(grid).gridTemplateColumns;
-    return Math.max(1, cols.split(" ").filter(Boolean).length);
-  }
-
-  /* How many cards fit on one screen. The first pass uses an estimate; once a
-     card is on screen we measure it and re-render if the estimate was wrong.
-     That keeps the grid exact at any window size or font scale. */
-  function pageSizeFor(grid, cardHeight, penalty) {
-    const cols = columnsOf(grid);
-    const body = grid.closest(".section__body");
-    const avail = body ? body.clientHeight : grid.clientHeight;
-    const gap = parseFloat(getComputedStyle(grid).rowGap) || 12;
-    const slack = 8;                                // absorb sub-pixel rounding
-    let rows = Math.floor((avail - slack + gap) / (cardHeight + gap));
-    rows -= (penalty || 0);                         // set by the fit check below
-    return Math.max(1, cols * Math.max(1, rows));
-  }
-
-  /* Last line of defence: if a grid still overflows its panel after rendering,
-     drop a row and try again. Guarantees no scrollbar at any viewport. */
-  function overflows(panelId) {
-    const p = $("#" + panelId);
-    return p && p.scrollHeight - p.clientHeight > 1;
-  }
-
-  /* Measure a rendered card; if it differs from the estimate we used, store the
-     real height and ask for one more pass. Returns true if a re-render is due. */
-  function reconcileCardHeight(grid, sel, key, pass) {
-    if (pass > 0) return false;                     // only ever one correction
-    const card = grid.querySelector(sel);
-    if (!card) return false;
-    const h = Math.ceil(card.getBoundingClientRect().height);
-    if (!h || Math.abs(h - (state[key] || 0)) <= 2) return false;
-    state[key] = h;
-    return true;
-  }
-
-  function setupPager(pagerId, countId, total, size, page, onChange) {
-    const pager = $("#" + pagerId);
-    const pages = Math.ceil(total / size);
-    if (pages <= 1) { pager.hidden = true; return; }
-    pager.hidden = false;
-    $("#" + countId).textContent = `${page + 1} / ${pages}`;
-    const prev = pager.querySelector('[data-page="prev"]');
-    const next = pager.querySelector('[data-page="next"]');
-    prev.disabled = page === 0;
-    next.disabled = page >= pages - 1;
-    prev.onclick = () => onChange(page - 1);
-    next.onclick = () => onChange(page + 1);
-  }
-
-  function emptyState(text) {
-    return `<div class="notice notice--empty" style="grid-column:1/-1">${icon("ic-alert")}<span>${esc(text)}</span></div>`;
-  }
-
-  /* A thumbnail that 404s or gets blocked degrades to the placeholder glyph
-     instead of a broken-image icon. */
-  function attachImgFallback(root) {
-    $$("img", root).forEach((img) => {
-      img.addEventListener("error", () => {
-        const holder = img.parentElement;
-        if (!holder) return;
-        img.remove();
-        if (!holder.querySelector(".thumb-fallback")) {
-          holder.insertAdjacentHTML("afterbegin",
-            `<div class="thumb-fallback">${icon("ic-cube")}</div>`);
-        }
-      }, { once: true });
+  /* Live refreshes only patch numbers and thumbnails in place, so nothing
+     re-animates or jumps while someone is reading. */
+  function patchGames() {
+    rows().forEach((g) => {
+      $$(`[data-visits="${g.id}"]`).forEach((el) => (el.textContent = R.compact(g.visits) + " visits"));
+      $$(`[data-ccu="${g.id}"]`).forEach((el) => {
+        el.textContent = R.compact(g.playing) + " playing";
+        el.classList.toggle("badge--live", g.playing > 0);
+      });
+      if (g.thumb) $$(`img[data-thumb="${g.id}"]`).forEach((img) => { if (img.src !== g.thumb) img.src = g.thumb; });
     });
   }
 
   /* ======================================================================
-     Games
+     Live stats
      =================================================================== */
 
-  function renderGames(pass = 0) {
+  function setPill(status) {
+    const map = { live: ["live", "Live"], cached: ["live", "Cached"], loading: ["loading", "Connecting"], fallback: ["offline", "Offline"], empty: ["offline", "No games"] };
+    const [state, label] = map[status] || map.loading;
+    $("#livepill").dataset.state = state;
+    $("#livepill-text").textContent = label;
+  }
+
+  /* The numbers wait at zero until the row scrolls into view, then count up. */
+  const STAT_KEYS = ["stat-visits", "stat-ccu", "stat-favs", "stat-games", "proof-years"];
+  function primeNumbers() {
+    if (FX.reduce) return;
+    STAT_KEYS.forEach((k) => bind(k).forEach((el) => { el.dataset.value = 0; el.textContent = k === "proof-years" ? "0+" : "0"; }));
+  }
+
+  function paintNumbers(animate) {
+    if (!stats) return;
+    const t = stats.totals;
+    const put = (key, value, fmt) => bind(key).forEach((el) =>
+      animate ? FX.countUp(el, value, fmt) : (el.textContent = fmt(value), el.dataset.value = value));
+    put("stat-visits", t.visits, R.short);
+    put("stat-ccu", t.playing, R.full);
+    put("stat-favs", t.favorites, R.short);
+    put("stat-games", (C.games || []).length, String);
+    put("proof-years", C.identity.yearsExperience, (n) => n + "+");
+  }
+
+  function paintStats(result) {
+    stats = result;
+    setPill(result.status);
+    renderIdentity();
+    $("#about-bio").innerHTML = R.bio(C.about.bio, vars());
+    patchGames();
+    if (statsSeen) paintNumbers(true);
+    lastUpdate = Date.now();
+    setBind("updated", "just now");
+  }
+
+  function relTime(ts) {
+    const s = Math.floor((Date.now() - ts) / 1000);
+    if (s < 30) return "just now";
+    if (s < 3600) return Math.max(1, Math.floor(s / 60)) + "m ago";
+    return Math.floor(s / 3600) + "h ago";
+  }
+
+  async function loadStats() {
+    const result = await window.RobloxStats.load();
+    paintStats(result);
+  }
+
+  function initStats() {
+    const cached = window.RobloxStats.peekCache();
+    if (cached) paintStats(cached);
+    else setPill("loading");
+
+    const row = $(".stats__row");
+    const io = new IntersectionObserver((entries) => {
+      if (!entries.some((e) => e.isIntersecting)) return;
+      io.disconnect();
+      statsSeen = true;
+      if (stats) paintNumbers(true);
+    }, { threshold: 0.3 });
+    io.observe(row);
+
+    loadStats();
+    const every = (C.api.refreshSeconds || 120) * 1000;
+    setInterval(() => { if (!document.hidden) loadStats(); }, every);
+    setInterval(() => { if (lastUpdate) setBind("updated", relTime(lastUpdate)); }, 20000);
+  }
+
+  /* ======================================================================
+     Navigation
+     =================================================================== */
+
+  function initNav() {
+    const nav = $("#nav");
+    const menu = $("#nav-menu");
+    const close = () => { nav.classList.remove("is-open"); menu.setAttribute("aria-expanded", "false"); menu.setAttribute("aria-label", "Open menu"); };
+    menu.addEventListener("click", () => {
+      const open = !nav.classList.contains("is-open");
+      nav.classList.toggle("is-open", open);
+      menu.setAttribute("aria-expanded", String(open));
+      menu.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+    });
+    $$("#nav-links a").forEach((a) => a.addEventListener("click", close));
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape") close(); });
+
+    // Solid pill once the hero is mostly out of view.
+    new IntersectionObserver(([e]) => nav.classList.toggle("is-scrolled", !e.isIntersecting), { rootMargin: "-80px 0px 0px 0px", threshold: 0 })
+      .observe($(".hero__copy"));
+
+    // Highlight the section being read.
+    const links = new Map($$("[data-nav]").map((a) => [a.dataset.nav, a]));
+    const seen = new Map();
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => seen.set(e.target.id, e.isIntersecting ? e.intersectionRatio : 0));
+      let best = null, ratio = 0;
+      seen.forEach((r, id) => { if (r > ratio) { ratio = r; best = id; } });
+      links.forEach((a) => a.removeAttribute("aria-current"));
+      if (best && links.has(best)) links.get(best).setAttribute("aria-current", "true");
+    }, { threshold: [0, 0.15, 0.3, 0.5, 0.75] });
+    links.forEach((_, id) => { const s = document.getElementById(id); if (s) io.observe(s); });
+  }
+
+  /* ======================================================================
+     Games: show all
+     =================================================================== */
+
+  function initMore() {
+    const btn = $("#games-more");
     const grid = $("#games-grid");
-    if (!grid) return;
-
-    const configured = C.games || [];
-    if (!configured.length) {
-      grid.innerHTML = emptyState("No games added yet.");
-      $("#games-pager").hidden = true;
-      return;
-    }
-
-    // Merge live data onto the configured order.
-    const rows = R.gameRows(C, state.stats && state.stats.games);
-
-    const size = pageSizeFor(grid, state.gameCardH || 236, state.gamesPenalty);
-    const pages = Math.ceil(rows.length / size);
-    state.gamesPage = Math.min(state.gamesPage, Math.max(0, pages - 1));
-    const slice = rows.slice(state.gamesPage * size, state.gamesPage * size + size);
-
-    grid.innerHTML = slice.map(R.gameCard).join("");
-
-    if (reconcileCardHeight(grid, ".game", "gameCardH", pass)) return renderGames(1);
-    if (pass < 3 && slice.length > 1 && overflows("panel-games")) {
-      state.gamesPenalty = (state.gamesPenalty || 0) + 1;
-      return renderGames(pass + 1);
-    }
-
-    attachImgFallback(grid);
-    setupPager("games-pager", "games-pager-count", rows.length, size, state.gamesPage, (p) => {
-      state.gamesPage = p; renderGames();
+    const total = (C.games || []).length;
+    if (total <= FEATURED + 8) { btn.parentElement.hidden = true; grid.classList.remove("is-collapsed"); return; }
+    btn.addEventListener("click", () => {
+      const open = grid.classList.toggle("is-collapsed") === false;
+      btn.setAttribute("aria-expanded", String(open));
+      btn.innerHTML = open ? "<span>Show fewer games</span>" : `<span>Show all <span data-bind="games-count">${total}</span> games</span>`;
+      if (!open) $("#games").scrollIntoView({ behavior: FX.reduce ? "auto" : "smooth" });
     });
   }
 
   /* ======================================================================
-     Media
+     Contact: copy Discord
      =================================================================== */
 
-  function mediaThumb(m) {
-    if (m.type === "youtube") return `https://img.youtube.com/vi/${m.src}/hqdefault.jpg`;
-    if (m.type === "video")   return m.poster || null;
-    return m.src;
+  function initCopy() {
+    document.addEventListener("click", async (e) => {
+      const btn = e.target.closest && e.target.closest("[data-copy]");
+      if (!btn) return;
+      try { await navigator.clipboard.writeText(btn.dataset.copy); toast(`Copied ${btn.dataset.copy}`); }
+      catch (_) { toast("Copy failed, select it manually"); }
+    });
   }
 
-  function renderMedia(pass = 0) {
-    const grid = $("#media-grid");
-    if (!grid) return;
-
-    const items = C.media || [];
-    if (!items.length) {
-      grid.innerHTML = emptyState("No videos or screenshots added yet.");
-      $("#media-pager").hidden = true;
-      return;
-    }
-
-    const size = pageSizeFor(grid, state.mediaCardH || 150, state.mediaPenalty);
-    const pages = Math.ceil(items.length / size);
-    state.mediaPage = Math.min(state.mediaPage, Math.max(0, pages - 1));
-    const start = state.mediaPage * size;
-    const slice = items.slice(start, start + size);
-
-    grid.innerHTML = slice.map((m, i) => {
-      const t = mediaThumb(m);
-      const isVideo = m.type === "youtube" || m.type === "video";
-      // An mp4 with no poster still needs a preview: load just enough metadata
-      // to paint a frame from half a second in (frame 0 is often black).
-      const visual = (m.type === "video" && !m.poster)
-        ? `<video src="${esc(m.src)}#t=0.5" preload="metadata" muted playsinline aria-hidden="true"></video>`
-        : t ? `<img src="${esc(t)}" alt="${esc(m.title || "Work sample")}" loading="lazy">`
-            : `<div class="thumb-fallback">${icon("ic-media")}</div>`;
-      return `
-        <button class="tile pop-in" style="--i:${i}" data-media="${start + i}" aria-label="Open ${esc(m.title || "media")}">
-          ${visual}
-          ${isVideo ? `<span class="tile__play">${icon("ic-play")}</span>` : ""}
-          <span class="tile__overlay">
-            <span class="tile__title">${esc(m.title || "Untitled")}</span>
-            ${m.caption ? `<span class="tile__caption">${esc(m.caption)}</span>` : ""}
-          </span>
-        </button>`;
-    }).join("");
-
-    if (reconcileCardHeight(grid, ".tile", "mediaCardH", pass)) return renderMedia(1);
-    if (pass < 3 && slice.length > 1 && overflows("panel-media")) {
-      state.mediaPenalty = (state.mediaPenalty || 0) + 1;
-      return renderMedia(pass + 1);
-    }
-
-    attachImgFallback(grid);
-    $$("#media-grid [data-media]").forEach((btn) => {
-      btn.addEventListener("click", () => openLightbox(Number(btn.dataset.media)));
-    });
-
-    setupPager("media-pager", "media-pager-count", items.length, size, state.mediaPage, (p) => {
-      state.mediaPage = p; renderMedia();
-    });
+  function toast(msg) {
+    const el = document.createElement("div");
+    el.className = "toast";
+    el.innerHTML = `${R.icon("ic-check")}<span>${R.esc(msg)}</span>`;
+    $("#toasts").appendChild(el);
+    setTimeout(() => { el.classList.add("is-out"); setTimeout(() => el.remove(), 260); }, 2600);
   }
 
   /* ======================================================================
-     Lightbox
+     Lightbox for clips
      =================================================================== */
 
   let lbIndex = 0, lbLastFocus = null;
@@ -389,12 +229,8 @@
     if (!items.length) return;
     lbIndex = ((i % items.length) + items.length) % items.length;
     lbLastFocus = document.activeElement;
-
     const lb = $("#lightbox");
     lb.hidden = false;
-    // Force a reflow so the transition still runs, without depending on rAF
-    // (which never fires in a throttled/backgrounded tab — the dialog would
-    // paint its content but stay at opacity 0).
     void lb.offsetWidth;
     lb.classList.add("is-open");
     paintLightbox();
@@ -405,47 +241,44 @@
     const items = C.media || [];
     const m = items[lbIndex];
     const frame = $("#lightbox-frame");
-
     if (m.type === "youtube") {
-      frame.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${esc(m.src)}?autoplay=1&rel=0"
-        title="${esc(m.title || "Video")}" allow="accelerometer; autoplay; encrypted-media; picture-in-picture"
-        allowfullscreen></iframe>`;
+      frame.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${R.esc(m.src)}?autoplay=1&rel=0" title="${R.esc(m.title || "Video")}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
     } else if (m.type === "video") {
-      frame.innerHTML = `<video src="${esc(m.src)}" ${m.poster ? `poster="${esc(m.poster)}"` : ""}
-        controls autoplay playsinline style="max-width:100%"></video>`;
+      frame.innerHTML = `<video src="${R.esc(m.src)}" ${m.poster ? `poster="${R.esc(m.poster)}"` : ""} controls autoplay playsinline></video>`;
     } else {
-      frame.innerHTML = `<img src="${esc(m.src)}" alt="${esc(m.title || "Work sample")}">`;
+      frame.innerHTML = `<img src="${R.esc(m.src)}" alt="${R.esc(m.title || "Work sample")}">`;
     }
-
-    $("#lightbox-title").textContent   = m.title || "";
+    $("#lightbox-title").textContent = m.title || "";
     $("#lightbox-caption").textContent = m.caption || "";
-    $("#lightbox-count").textContent   = `${lbIndex + 1} / ${items.length}`;
-    const multi = items.length > 1;
-    $("#lightbox-prev").hidden = !multi;
-    $("#lightbox-next").hidden = !multi;
+    $("#lightbox-count").textContent = `${lbIndex + 1} / ${items.length}`;
+    $("#lightbox-prev").hidden = $("#lightbox-next").hidden = items.length < 2;
   }
 
   function closeLightbox() {
     const lb = $("#lightbox");
     lb.classList.remove("is-open");
-    $("#lightbox-frame").innerHTML = "";      // stops playback
+    $("#lightbox-frame").innerHTML = "";
     setTimeout(() => { lb.hidden = true; }, 240);
     if (lbLastFocus) lbLastFocus.focus();
   }
 
   function initLightbox() {
+    const step = (d) => { const n = (C.media || []).length; lbIndex = (((lbIndex + d) % n) + n) % n; paintLightbox(); };
+    document.addEventListener("click", (e) => {
+      const tile = e.target.closest && e.target.closest("[data-media]");
+      if (tile) openLightbox(Number(tile.dataset.media));
+    });
     $("#lightbox-close").addEventListener("click", closeLightbox);
-    $("#lightbox-prev").addEventListener("click", () => { lbIndex--; wrapLb(); paintLightbox(); });
-    $("#lightbox-next").addEventListener("click", () => { lbIndex++; wrapLb(); paintLightbox(); });
+    $("#lightbox-prev").addEventListener("click", () => step(-1));
+    $("#lightbox-next").addEventListener("click", () => step(1));
     $("#lightbox").addEventListener("click", (e) => { if (e.target.id === "lightbox") closeLightbox(); });
-
     document.addEventListener("keydown", (e) => {
       if (!$("#lightbox").classList.contains("is-open")) return;
-      if (e.key === "Escape")     { e.preventDefault(); closeLightbox(); }
-      if (e.key === "ArrowLeft")  { e.preventDefault(); lbIndex--; wrapLb(); paintLightbox(); }
-      if (e.key === "ArrowRight") { e.preventDefault(); lbIndex++; wrapLb(); paintLightbox(); }
-      if (e.key === "Tab") {                                // simple focus trap
-        const f = $$("#lightbox button:not([hidden]), #lightbox a, #lightbox video, #lightbox iframe");
+      if (e.key === "Escape") { e.preventDefault(); closeLightbox(); }
+      if (e.key === "ArrowLeft") { e.preventDefault(); step(-1); }
+      if (e.key === "ArrowRight") { e.preventDefault(); step(1); }
+      if (e.key === "Tab") {
+        const f = $$("#lightbox button:not([hidden]), #lightbox video, #lightbox iframe");
         if (!f.length) return;
         const first = f[0], last = f[f.length - 1];
         if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
@@ -454,184 +287,15 @@
     });
   }
 
-  function wrapLb() {
-    const n = (C.media || []).length;
-    lbIndex = ((lbIndex % n) + n) % n;
-  }
-
-  /* ======================================================================
-     Live stats
-     =================================================================== */
-
-  function setPill(status) {
-    const pill = $("#livepill"), text = $("#livepill-text");
-    const map = {
-      live:     ["live",    "Live"],
-      cached:   ["live",    "Cached"],
-      loading:  ["loading", "Loading"],
-      fallback: ["offline", "Offline"],
-      empty:    ["offline", "No games"],
-    };
-    const [stateName, label] = map[status] || map.loading;
-    pill.dataset.state = stateName;
-    text.textContent = label;
-  }
-
-  function paintStats(result, firstPaint) {
-    state.stats = result;
-    const t = result.totals;
-    renderIdentity();
-    $("#about-bio").innerHTML = R.bio(C.about.bio, vars());
-
-    $("#stats-root").classList.remove("is-loading");
-    setPill(result.status);
-
-    // No games configured yet → show a placeholder dash. Advertising "0 visits"
-    // is worse than admitting there's nothing wired up.
-    if (result.status === "empty") {
-      ["proof-visits", "proof-ccu", "console-ccu", "stat-visits", "stat-ccu", "stat-favs"]
-        .forEach((k) => bind(k).forEach((el) => (el.textContent = "—")));
-      bind("stat-games")[0].textContent = "—";
-      paintBars([]);
-      paintNotice("empty");
-      lastUpdate = 0;                       // stop the "updated Xs ago" ticker
-      bind("updated").forEach((el) => (el.textContent = "not connected"));
-      renderGames();
-      return;
-    }
-
-    // Hero: compact. Stats tab: exact. Two readings of the same truth.
-    if (firstPaint) {
-      countTo(bind("proof-visits")[0], t.visits, compact);
-      countTo(bind("proof-ccu")[0],    t.playing, compact);
-      countTo(bind("console-ccu")[0],  t.playing, compact);
-      countTo(bind("stat-visits")[0],  t.visits, full);
-      countTo(bind("stat-ccu")[0],     t.playing, full);
-      countTo(bind("stat-favs")[0],    t.favorites, full);
-    } else {
-      bind("proof-visits")[0].textContent = compact(t.visits);
-      bind("proof-ccu")[0].textContent    = compact(t.playing);
-      bind("console-ccu")[0].textContent  = compact(t.playing);
-      bind("stat-visits")[0].textContent  = full(t.visits);
-      bind("stat-ccu")[0].textContent     = full(t.playing);
-      bind("stat-favs")[0].textContent    = full(t.favorites);
-    }
-    bind("stat-games")[0].textContent = t.count || (C.games || []).length || "0";
-
-    paintBars(result.games);
-    paintNotice(result.status);
-    bind("updated").forEach((el) => (el.textContent = "updated " + relTime(Date.now())));
-    lastUpdate = Date.now();
-
-    renderGames();
-  }
-
-  function paintBars(games) {
-    const wrap = $("#console-bars");
-    if (!wrap) return;
-    wrap.innerHTML = R.bars(games);
-
-    $$("#console-bars .bar__fill").forEach((f) => {
-      void f.offsetWidth;                    // flush the 0-width start state
-      f.style.width = f.dataset.w + "%";
-    });
-  }
-
-  function paintNotice(status) {
-    const el = $("#stats-notice");
-    if (status === "live") { el.innerHTML = ""; return; }
-    const msg = {
-      cached:   "Roblox didn't answer just now, so these are the last numbers I got.",
-      fallback: "Can't reach Roblox right now. Try again in a minute.",
-      empty:    "No games added yet.",
-    }[status];
-    el.innerHTML = msg
-      ? `<div class="notice${status === "empty" ? " notice--empty" : ""}">${icon("ic-alert")}<span>${esc(msg)}</span></div>`
-      : "";
-  }
-
-  let lastUpdate = 0;
-
-  async function loadStats(firstPaint) {
-    const hasIds = (C.games || []).some((g) => typeof g.universeId === "number" && g.universeId > 0);
-    let hadCache = false;
-    if (firstPaint && hasIds) {
-      $("#stats-root").classList.add("is-loading");
-      setPill("loading");
-      // Only trust the cache if games are still configured — otherwise a stale
-      // entry from a removed game would show numbers that are no longer yours.
-      const cached = window.RobloxStats.peekCache();
-      if (cached) { hadCache = true; paintStats(cached, true); }  // instant paint, then refresh
-    }
-    const result = await window.RobloxStats.load();
-    // Only animate once: on a cold visit, or on the cached paint above.
-    paintStats(result, Boolean(firstPaint) && !hadCache);
-  }
-
-  function initStats() {
-    loadStats(true);
-    const every = (C.api.refreshSeconds || 120) * 1000;
-    setInterval(() => { if (!document.hidden) loadStats(false); }, every);
-    document.addEventListener("visibilitychange", () => {
-      if (!document.hidden && Date.now() - lastUpdate > every) loadStats(false);
-    });
-    setInterval(() => {
-      if (lastUpdate) bind("updated").forEach((el) => (el.textContent = "updated " + relTime(lastUpdate)));
-    }, 20000);
-  }
-
-  /* ======================================================================
-     Misc
-     =================================================================== */
-
-  /* Ripple from the click point on buttons and contact cards. */
-  function initRipples() {
-    document.addEventListener("pointerdown", (e) => {
-      if (reduceMotion) return;
-      const host = e.target.closest(".btn, .channel, .pager__btn");
-      if (!host) return;
-      const r = host.getBoundingClientRect();
-      const size = Math.max(r.width, r.height);
-      const el = document.createElement("span");
-      el.className = "ripple";
-      el.style.width = el.style.height = size + "px";
-      el.style.left = (e.clientX - r.left - size / 2) + "px";
-      el.style.top  = (e.clientY - r.top  - size / 2) + "px";
-      host.appendChild(el);
-      el.addEventListener("animationend", () => el.remove(), { once: true });
-    });
-  }
-
-  function toast(msg) {
-    const wrap = $("#toasts");
-    const el = document.createElement("div");
-    el.className = "toast";
-    el.innerHTML = `${icon("ic-check")}<span>${esc(msg)}</span>`;
-    wrap.appendChild(el);
-    setTimeout(() => {
-      el.classList.add("is-out");
-      setTimeout(() => el.remove(), 260);
-    }, 2600);
-  }
-
-  function initClock() {
-    const paint = () => {
-      const t = new Date();
-      bind("clock").forEach((el) =>
-        (el.textContent = String(t.getHours()).padStart(2, "0") + ":" + String(t.getMinutes()).padStart(2, "0")));
-    };
-    paint();
-    setInterval(paint, 30000);
-  }
-
-  function debounce(fn, ms) {
-    let id;
-    return (...a) => { clearTimeout(id); id = setTimeout(() => fn(...a), ms); };
-  }
-
-  function renderCounts() {
-    bind("games-count").forEach((el) => (el.textContent = (C.games || []).length || ""));
-    bind("media-count").forEach((el) => (el.textContent = (C.media || []).length || ""));
+  /* Broken or blocked thumbnails fall back to a placeholder glyph. */
+  function initImgFallback() {
+    document.addEventListener("error", (e) => {
+      const img = e.target;
+      if (!(img instanceof HTMLImageElement) || !img.dataset.thumb) return;
+      const holder = img.parentElement;
+      img.remove();
+      if (holder && !holder.querySelector(".thumb-fallback")) holder.insertAdjacentHTML("afterbegin", `<span class="thumb-fallback">${R.icon("ic-cube")}</span>`);
+    }, true);
   }
 
   /* ======================================================================
@@ -639,16 +303,29 @@
      =================================================================== */
 
   function init() {
+    const snap = window.RobloxStats.peekCache();
+    if (snap) stats = snap;
     renderIdentity();
-    renderAbout();
-    renderContact();
-    renderCounts();
-    initTabs();
-    initLightbox();
-    initRipples();
-    initClock();
+    renderStatic();
     renderGames();
-    renderMedia();
+    paintNumbers(false);
+    primeNumbers();
+
+    initNav();
+    initMore();
+    initCopy();
+    initLightbox();
+    initImgFallback();
+
+    FX.aurora($("#aurora"));
+    FX.blurText($("#headline"));
+    FX.cardSwap($("#swap"), { dx: 38, dy: 36, dz: 64 });
+    FX.logoLoop($("#loop"));
+    FX.spotlight();
+    FX.magnet($$("[data-magnet]"));
+    FX.clickSpark($("#sparks"));
+    FX.reveal();
+
     initStats();
   }
 

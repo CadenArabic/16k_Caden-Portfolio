@@ -1,8 +1,14 @@
-# Fullstack Roblox Developer — Portfolio
+# 16k_Caden: Fullstack Roblox Developer portfolio
 
-A single-screen, tab-based portfolio. Nothing scrolls: six tabs (Welcome, About,
-Live Stats, Games, Media, Contact) swap in place, and visit/CCU numbers are
-pulled live from Roblox.
+A one-page scrolling portfolio: hero, live numbers, every game, About, clips and
+Contact. Visit and CCU numbers are pulled live from Roblox.
+
+The motion is plain-JavaScript ports of [React Bits](https://reactbits.dev)
+effects (MIT + Commons Clause), in `assets/js/effects.js`: the Aurora shader
+behind the hero, Blur Text on the headline, a Card Swap deck of your top games,
+a Logo Loop strip of every game, Count Up stats, Spotlight cards, Magnet
+buttons, Click Spark and reveal-on-scroll. All of it switches off for visitors
+who ask their system for reduced motion.
 
 Plain HTML, CSS and JavaScript. No dependencies, no npm install. One optional
 Node script (`tools/prerender.mjs`) bakes the content into `index.html`.
@@ -40,7 +46,7 @@ Then open <http://localhost:4321>.
 
 ### The headline
 
-Whatever you wrap in `*asterisks*` gets the green-to-cyan gradient:
+Whatever you wrap in `*asterisks*` turns green:
 
 ```js
 headline: "One developer for your *whole Roblox game.*",
@@ -144,8 +150,8 @@ The order of attempts is:
 3. `localStorage` cache — the last successful reading
 4. The `fallback` numbers in your config
 
-The tab never shows a broken state; it degrades through those four steps and
-tells you which one it's on via the pill in the top right.
+The numbers never show a broken state; they degrade through those four steps and
+the pill under the stats row says which one is in use.
 
 If roproxy ever goes down, swap the host in `config.js` → `api.hosts`.
 
@@ -153,10 +159,9 @@ If roproxy ever goes down, swap the host in `config.js` → `api.hosts`.
 
 ## Keyboard and accessibility
 
-- `←` / `→` switch tabs from anywhere
-- Every tab is deep-linkable: `yoursite.com/#games` opens on that tab
-- Proper `tablist` / `tab` / `tabpanel` roles and roving tabindex
-- Focus rings on everything, `Esc` closes the media viewer
+- Every section is deep-linkable: `yoursite.com/#games`, `#about`, `#media`, `#contact`
+- A skip link, a nav that highlights the section you're reading, real headings
+- Focus rings on everything, `Esc` closes the media viewer and the phone menu
 - `prefers-reduced-motion` disables all animation
 - Touch targets grow to 44px on touch devices
 
@@ -164,25 +169,10 @@ If roproxy ever goes down, swap the host in `config.js` → `api.hosts`.
 
 ## Device sizes
 
-Verified with nothing scrolling at 1440×900, 1280×800, 1024×768, 768×1024 and
-844×390 (landscape phone). The Games and Media grids measure themselves and pick
-how many cards fit, so a page never overflows and never wastes a row:
-
-| Screen | Games per page |
-|---|---|
-| 1440×900 | 14 |
-| 375×812 | 4, as horizontal rows |
-
-Other sizes fit as many as the screen holds; the pager covers the rest.
-
-### One exception
-
-On phones in portrait, the **About** panel scrolls internally — roughly 80px at
-390×844, 130px at 360×740. There is more text in it than a phone screen holds.
-Every other panel fits exactly, at every size, including landscape.
-
-To make About fit phones too, shorten `about.bio` to one paragraph or drop a
-couple of `about.skills` items in `config.js`.
+Checked at 1440×900 and 375×812 with no sideways scrolling. The top 5 games sit
+in a bento grid (one large tile, four small); the rest are in a grid that shows
+8 until "Show all" is pressed. On phones the bento becomes one column and the
+grid two.
 
 ---
 
@@ -195,7 +185,8 @@ assets/js/config.js        ← the only file you edit
 assets/js/render.js        markup for bio, skills, games, pricing, contact (browser + Node)
 assets/js/snapshot.js      last numbers saved by the prerender
 assets/js/roblox.js        live stats fetching, caching, fallbacks
-assets/js/app.js           tabs, routing, paging, live stats, lightbox
+assets/js/effects.js       React Bits effect ports (aurora, blur text, card swap, ...)
+assets/js/app.js           page wiring, nav, live stats, show-all, lightbox
 assets/media/              your images and videos
 tools/prerender.mjs        bakes content into index.html (node tools/prerender.mjs)
 ```
