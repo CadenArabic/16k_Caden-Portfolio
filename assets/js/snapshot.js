@@ -1,6 +1,6 @@
 /* Written by tools/prerender.mjs. Last known numbers, painted before the live fetch. */
 window.SNAPSHOT = {
- "at": "2026-11-07T12:39:08.553Z",
+ "at": "2026-11-07T12:42:43.876Z",
  "thumbs": {
   "2576960132": "assets/thumbs/2576960132.webp",
   "2778824421": "assets/thumbs/2778824421.webp",
@@ -48,8 +48,8 @@ window.SNAPSHOT = {
    "universeId": 9160234761,
    "rootPlaceId": 78758085598611,
    "name": "Dangerous RV Driving",
-   "visits": 7243154,
-   "playing": 9,
+   "visits": 7243155,
+   "playing": 10,
    "favorites": 10905,
    "thumb": "assets/thumbs/9160234761.webp"
   },
@@ -66,8 +66,8 @@ window.SNAPSHOT = {
    "universeId": 9488122827,
    "rootPlaceId": 118638953131946,
    "name": "Four in a Row!",
-   "visits": 2409616,
-   "playing": 7,
+   "visits": 2409620,
+   "playing": 8,
    "favorites": 6869,
    "thumb": "assets/thumbs/9488122827.webp"
   },
@@ -129,8 +129,8 @@ window.SNAPSHOT = {
    "universeId": 10143449522,
    "rootPlaceId": 101931368733728,
    "name": "Scary Pizzeria: ANOMALIES [HORROR]",
-   "visits": 538792,
-   "playing": 7,
+   "visits": 538797,
+   "playing": 1,
    "favorites": 5313,
    "thumb": "assets/thumbs/10143449522.webp"
   },
@@ -219,8 +219,8 @@ window.SNAPSHOT = {
    "universeId": 10770035099,
    "rootPlaceId": 102399059182565,
    "name": "Chop a Lucky Nest",
-   "visits": 64121,
-   "playing": 122,
+   "visits": 64150,
+   "playing": 120,
    "favorites": 249,
    "thumb": "assets/thumbs/10770035099.webp"
   },
@@ -273,9 +273,9 @@ window.SNAPSHOT = {
    "universeId": 10768217698,
    "rootPlaceId": 97827991493021,
    "name": "Feed the Creature",
-   "visits": 39873,
-   "playing": 33,
-   "favorites": 109,
+   "visits": 39892,
+   "playing": 30,
+   "favorites": 111,
    "thumb": "assets/thumbs/10768217698.webp"
   },
   {

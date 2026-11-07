@@ -353,19 +353,15 @@ ul, ol { list-style: none; padding: 0; }
 .more { display: flex; justify-content: center; margin-top: 28px; }
 
 /* ---------- 10b. Builds, models and UI ---------------------------------- */
-.shots { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-auto-flow: dense; gap: 14px; }
+.shots { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
 .shot {
   display: flex; flex-direction: column; text-align: left; overflow: hidden; padding: 0;
   border-radius: var(--r); border: 1px solid var(--border); background: var(--surface);
   transition: translate .45s var(--spring), border-color var(--t) var(--ease), box-shadow var(--t) var(--ease);
 }
 .shot:hover { translate: 0 -4px; border-color: var(--border-strong); box-shadow: 0 24px 50px -24px rgb(0 0 0 / .9); }
-.shot--big { grid-column: span 2; grid-row: span 2; }
-.shot--big.shot--right { grid-column: 2 / span 2; }
 .shot--full { grid-column: 1 / -1; }
 .shot__media { position: relative; display: block; aspect-ratio: 16 / 9; overflow: hidden; background: var(--surface-3); }
-.shot--big .shot__media { aspect-ratio: auto; flex: 1; min-height: 240px; }
-.shot--big .shot__media img { position: absolute; inset: 0; }
 .shot--full .shot__media { aspect-ratio: 1600 / 743; }
 .shot__media img { width: 100%; height: 100%; object-fit: cover; transition: scale .7s var(--ease); }
 .shot:hover .shot__media img { scale: 1.04; }
@@ -593,15 +589,9 @@ html.js [data-reveal].is-in { opacity: 1; transform: none; filter: none; }
   .channel__icon { width: 34px; height: 34px; border-radius: 10px; }
 }
 
-@media (max-width: 860px) {
-  .shots { grid-template-columns: 1fr 1fr; }
-  .shot--big, .shot--big.shot--right { grid-column: 1 / -1; grid-row: auto; }
-  .shot--big .shot__media { aspect-ratio: 16 / 9; flex: none; min-height: 0; }
-}
-
 @media (max-width: 560px) {
   .shots { grid-template-columns: 1fr; }
-  .shot, .shot--big, .shot--big.shot--right, .shot--full { grid-column: auto; }
+  .shot--full { grid-column: auto; }
   .bento { grid-template-columns: 1fr; }
   .feat--lead { grid-column: auto; }
   .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
