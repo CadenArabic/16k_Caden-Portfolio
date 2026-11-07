@@ -1,15 +1,57 @@
 /* Written by tools/prerender.mjs. Last known numbers, painted before the live fetch. */
 window.SNAPSHOT = {
- "at": "2026-11-07T00:11:42.571Z",
+ "at": "2026-11-07T00:18:40.823Z",
+ "thumbs": {
+  "2576960132": "assets/thumbs/2576960132.webp",
+  "2778824421": "assets/thumbs/2778824421.webp",
+  "9160234761": "assets/thumbs/9160234761.webp",
+  "8865934317": "assets/thumbs/8865934317.webp",
+  "9488122827": "assets/thumbs/9488122827.webp",
+  "9508198844": "assets/thumbs/9508198844.webp",
+  "9825427575": "assets/thumbs/9825427575.webp",
+  "9684216326": "assets/thumbs/9684216326.webp",
+  "8158669578": "assets/thumbs/8158669578.webp",
+  "10143449522": "assets/thumbs/10143449522.webp",
+  "8048361149": "assets/thumbs/8048361149.webp",
+  "9889664408": "assets/thumbs/9889664408.webp",
+  "9715259353": "assets/thumbs/9715259353.webp",
+  "9858955445": "assets/thumbs/9858955445.webp",
+  "9856252042": "assets/thumbs/9856252042.webp",
+  "9958506970": "assets/thumbs/9958506970.webp",
+  "9539819854": "assets/thumbs/9539819854.webp",
+  "10023401715": "assets/thumbs/10023401715.webp",
+  "8471471873": "assets/thumbs/8471471873.webp",
+  "10770035099": "assets/thumbs/10770035099.webp",
+  "9855239414": "assets/thumbs/9855239414.webp",
+  "5829071530": "assets/thumbs/5829071530.webp",
+  "9986533324": "assets/thumbs/9986533324.webp",
+  "9700383470": "assets/thumbs/9700383470.webp",
+  "9551152786": "assets/thumbs/9551152786.webp",
+  "10768217698": "assets/thumbs/10768217698.webp",
+  "10766728783": "assets/thumbs/10766728783.webp",
+  "9742452738": "assets/thumbs/9742452738.webp",
+  "9870987151": "assets/thumbs/9870987151.webp",
+  "9665201247": "assets/thumbs/9665201247.webp",
+  "8684640288": "assets/thumbs/8684640288.webp",
+  "9897477160": "assets/thumbs/9897477160.webp",
+  "10771812020": "assets/thumbs/10771812020.webp",
+  "10257555178": "assets/thumbs/10257555178.webp",
+  "8878100545": "assets/thumbs/8878100545.webp",
+  "10768184152": "assets/thumbs/10768184152.webp",
+  "10766457988": "assets/thumbs/10766457988.webp",
+  "8770927660": "assets/thumbs/8770927660.webp",
+  "10154654970": "assets/thumbs/10154654970.png",
+  "10486990560": "assets/thumbs/10486990560.png"
+ },
  "games": [
   {
    "universeId": 9160234761,
    "rootPlaceId": 78758085598611,
    "name": "Dangerous RV Driving",
-   "visits": 7242388,
-   "playing": 7,
+   "visits": 7242402,
+   "playing": 5,
    "favorites": 10902,
-   "thumb": "https://tr.rbxcdn.com/180DAY-66123c67454e98332e6269c109680232/768/432/Image/Png/noFilter"
+   "thumb": "assets/thumbs/9160234761.webp"
   },
   {
    "universeId": 8865934317,
@@ -18,16 +60,16 @@ window.SNAPSHOT = {
    "visits": 4848549,
    "playing": 0,
    "favorites": 11283,
-   "thumb": "https://tr.rbxcdn.com/180DAY-200948403eb571f873cceb97cbc3a74a/768/432/Image/Png/noFilter"
+   "thumb": "assets/thumbs/8865934317.webp"
   },
   {
    "universeId": 9488122827,
    "rootPlaceId": 118638953131946,
    "name": "Four in a Row!",
-   "visits": 2408211,
-   "playing": 14,
+   "visits": 2408223,
+   "playing": 15,
    "favorites": 6864,
-   "thumb": "https://tr.rbxcdn.com/180DAY-957ab6cf4e43c4fcacb3991bacd5a223/768/432/Image/Png/noFilter"
+   "thumb": "assets/thumbs/9488122827.webp"
   },
   {
    "universeId": 2576960132,
@@ -36,7 +78,7 @@ window.SNAPSHOT = {
    "visits": 1307434,
    "playing": 0,
    "favorites": 2421,
-   "thumb": "https://tr.rbxcdn.com/180DAY-11d997c21190e1eb3c7d0a18b7ba81c3/768/432/Image/Png/noFilter"
+   "thumb": "assets/thumbs/2576960132.webp"
   },
   {
    "universeId": 9508198844,
@@ -45,7 +87,7 @@ window.SNAPSHOT = {
    "visits": 1060432,
    "playing": 1,
    "favorites": 2375,
-   "thumb": "https://tr.rbxcdn.com/180DAY-1c38a03e171ae2e2d82692cb4d7bc35b/768/432/Image/Png/noFilter"
+   "thumb": "assets/thumbs/9508198844.webp"
   },
   {
    "universeId": 9825427575,
@@ -54,7 +96,7 @@ window.SNAPSHOT = {
    "visits": 1004124,
    "playing": 0,
    "favorites": 1961,
-   "thumb": "https://tr.rbxcdn.com/180DAY-07fcb51f654474191b0aacf23bbf52c2/768/432/Image/Png/noFilter"
+   "thumb": "assets/thumbs/9825427575.webp"
   },
   {
    "universeId": 9684216326,
@@ -63,7 +105,7 @@ window.SNAPSHOT = {
    "visits": 665634,
    "playing": 0,
    "favorites": 1201,
-   "thumb": "https://tr.rbxcdn.com/180DAY-c2f2d09b4b9d0b61ac70c7af7cd65037/768/432/Image/Png/noFilter"
+   "thumb": "assets/thumbs/9684216326.webp"
   },
   {
    "universeId": 8158669578,
@@ -72,7 +114,7 @@ window.SNAPSHOT = {
    "visits": 659279,
    "playing": 0,
    "favorites": 934,
-   "thumb": "https://tr.rbxcdn.com/180DAY-9be079976c4a7bdf1f97721cafee4ac2/768/432/Image/Png/noFilter"
+   "thumb": "assets/thumbs/8158669578.webp"
   },
   {
    "universeId": 2778824421,
@@ -81,16 +123,16 @@ window.SNAPSHOT = {
    "visits": 599371,
    "playing": 0,
    "favorites": 428,
-   "thumb": "https://tr.rbxcdn.com/180DAY-4b6efa9543cb04f84c97922ea1ed3862/768/432/Image/Png/noFilter"
+   "thumb": "assets/thumbs/2778824421.webp"
   },
   {
    "universeId": 10143449522,
    "rootPlaceId": 101931368733728,
    "name": "Scary Pizzeria: ANOMALIES [HORROR]",
-   "visits": 538097,
-   "playing": 8,
+   "visits": 538103,
+   "playing": 5,
    "favorites": 5306,
-   "thumb": "https://tr.rbxcdn.com/180DAY-01387424882b242d288a8f8117c17711/768/432/Image/Png/noFilter"
+   "thumb": "assets/thumbs/10143449522.webp"
   },
   {
    "universeId": 8048361149,
@@ -99,7 +141,7 @@ window.SNAPSHOT = {
    "visits": 381935,
    "playing": 0,
    "favorites": 39390,
-   "thumb": "https://tr.rbxcdn.com/180DAY-2f611055743907d6775f78b761fd36cd/768/432/Image/Png/noFilter"
+   "thumb": "assets/thumbs/8048361149.webp"
   },
   {
    "universeId": 9889664408,
@@ -108,7 +150,7 @@ window.SNAPSHOT = {
    "visits": 282704,
    "playing": 0,
    "favorites": 24480,
-   "thumb": "https://tr.rbxcdn.com/180DAY-92fb7e33fac72b18e4b69378d48812f7/768/432/Image/Png/noFilter"
+   "thumb": "assets/thumbs/9889664408.webp"
   },
   {
    "universeId": 9715259353,
@@ -117,7 +159,7 @@ window.SNAPSHOT = {
    "visits": 193174,
    "playing": 0,
    "favorites": 14382,
-   "thumb": "https://tr.rbxcdn.com/180DAY-d9f4a478e0e40c8f25a4fb17d7e4847b/768/432/Image/Png/noFilter"
+   "thumb": "assets/thumbs/9715259353.webp"
   },
   {
    "universeId": 9858955445,
@@ -126,7 +168,7 @@ window.SNAPSHOT = {
    "visits": 128323,
    "playing": 0,
    "favorites": 3756,
-   "thumb": "https://tr.rbxcdn.com/180DAY-77a61f5340eb1ce873374a021c7b3b20/768/432/Image/Png/noFilter"
+   "thumb": "assets/thumbs/9858955445.webp"
   },
   {
    "universeId": 9856252042,
@@ -135,7 +177,7 @@ window.SNAPSHOT = {
    "visits": 119829,
    "playing": 0,
    "favorites": 398,
-   "thumb": "https://tr.rbxcdn.com/180DAY-5889a80c56bfaa7fe1000cb2f81a18d1/768/432/Image/Png/noFilter"
+   "thumb": "assets/thumbs/9856252042.webp"
   },
   {
    "universeId": 9958506970,
@@ -144,7 +186,7 @@ window.SNAPSHOT = {
    "visits": 117927,
    "playing": 0,
    "favorites": 339,
-   "thumb": "https://tr.rbxcdn.com/180DAY-d991917c82f1ad2bca65fc0e076829cb/768/432/Image/Png/noFilter"
+   "thumb": "assets/thumbs/9958506970.webp"
   },
   {
    "universeId": 9539819854,
@@ -153,7 +195,7 @@ window.SNAPSHOT = {
    "visits": 104440,
    "playing": 0,
    "favorites": 84,
-   "thumb": "https://tr.rbxcdn.com/180DAY-8abf3278a88fd85384b304914928abe5/768/432/Image/Png/noFilter"
+   "thumb": "assets/thumbs/9539819854.webp"
   },
   {
    "universeId": 10023401715,
@@ -162,7 +204,7 @@ window.SNAPSHOT = {
    "visits": 78921,
    "playing": 0,
    "favorites": 4720,
-   "thumb": "https://tr.rbxcdn.com/180DAY-dc732da04f047cce2ff3e3b45a141163/768/432/Image/Png/noFilter"
+   "thumb": "assets/thumbs/10023401715.webp"
   },
   {
    "universeId": 8471471873,
@@ -171,16 +213,16 @@ window.SNAPSHOT = {
    "visits": 64713,
    "playing": 0,
    "favorites": 133,
-   "thumb": "https://tr.rbxcdn.com/180DAY-a38eab366d5e8c951def492f0b8bc5ce/768/432/Image/Png/noFilter"
+   "thumb": "assets/thumbs/8471471873.webp"
   },
   {
    "universeId": 10770035099,
    "rootPlaceId": 102399059182565,
    "name": "Chop a Lucky Nest",
-   "visits": 59590,
-   "playing": 38,
+   "visits": 59609,
+   "playing": 39,
    "favorites": 237,
-   "thumb": "https://tr.rbxcdn.com/180DAY-6923bda5072e68ad49021fc5fbe828a1/768/432/Image/Png/noFilter"
+   "thumb": "assets/thumbs/10770035099.webp"
   },
   {
    "universeId": 9855239414,
@@ -189,7 +231,7 @@ window.SNAPSHOT = {
    "visits": 57521,
    "playing": 0,
    "favorites": 146,
-   "thumb": "https://tr.rbxcdn.com/180DAY-749018ae0d964980fcc14874ae5483bc/768/432/Image/Png/noFilter"
+   "thumb": "assets/thumbs/9855239414.webp"
   },
   {
    "universeId": 5829071530,
@@ -198,7 +240,7 @@ window.SNAPSHOT = {
    "visits": 53844,
    "playing": 0,
    "favorites": 126,
-   "thumb": "https://tr.rbxcdn.com/180DAY-e84be5d2d5d1812b2f5e2d0d4456f332/768/432/Image/Png/noFilter"
+   "thumb": "assets/thumbs/5829071530.webp"
   },
   {
    "universeId": 9986533324,
@@ -207,7 +249,7 @@ window.SNAPSHOT = {
    "visits": 52034,
    "playing": 0,
    "favorites": 98,
-   "thumb": "https://tr.rbxcdn.com/180DAY-a778cd870d1ac4cca53907af0528a892/768/432/Image/Png/noFilter"
+   "thumb": "assets/thumbs/9986533324.webp"
   },
   {
    "universeId": 9700383470,
@@ -216,7 +258,7 @@ window.SNAPSHOT = {
    "visits": 45142,
    "playing": 0,
    "favorites": 4239,
-   "thumb": "https://tr.rbxcdn.com/180DAY-e09f2e6c7cd4dbab7714ad5783c50cb6/768/432/Image/Png/noFilter"
+   "thumb": "assets/thumbs/9700383470.webp"
   },
   {
    "universeId": 9551152786,
@@ -225,16 +267,16 @@ window.SNAPSHOT = {
    "visits": 40978,
    "playing": 0,
    "favorites": 41,
-   "thumb": "https://tr.rbxcdn.com/180DAY-4aa0e82d87c22f7f2d99cd90a4e3a820/768/432/Image/Png/noFilter"
+   "thumb": "assets/thumbs/9551152786.webp"
   },
   {
    "universeId": 10768217698,
    "rootPlaceId": 97827991493021,
    "name": "Feed the Creature",
-   "visits": 36464,
-   "playing": 18,
+   "visits": 36489,
+   "playing": 12,
    "favorites": 103,
-   "thumb": "https://tr.rbxcdn.com/180DAY-6082034aaeecb829d0b3ffbf21fae8df/768/432/Image/Png/noFilter"
+   "thumb": "assets/thumbs/10768217698.webp"
   },
   {
    "universeId": 10766728783,
@@ -243,7 +285,7 @@ window.SNAPSHOT = {
    "visits": 27567,
    "playing": 0,
    "favorites": 246,
-   "thumb": "https://tr.rbxcdn.com/180DAY-61a2284cc87c764b16d0323f1a207b98/768/432/Image/Png/noFilter"
+   "thumb": "assets/thumbs/10766728783.webp"
   },
   {
    "universeId": 9742452738,
@@ -252,7 +294,7 @@ window.SNAPSHOT = {
    "visits": 26555,
    "playing": 0,
    "favorites": 92,
-   "thumb": "https://tr.rbxcdn.com/180DAY-40836f00f283a8d44eefe078839009e6/768/432/Image/Png/noFilter"
+   "thumb": "assets/thumbs/9742452738.webp"
   },
   {
    "universeId": 9870987151,
@@ -261,7 +303,7 @@ window.SNAPSHOT = {
    "visits": 23280,
    "playing": 0,
    "favorites": 41,
-   "thumb": "https://tr.rbxcdn.com/180DAY-b21f3597fffc22caa939e14fd5c16e8b/768/432/Image/Png/noFilter"
+   "thumb": "assets/thumbs/9870987151.webp"
   },
   {
    "universeId": 9665201247,
@@ -270,7 +312,7 @@ window.SNAPSHOT = {
    "visits": 22606,
    "playing": 0,
    "favorites": 15,
-   "thumb": "https://tr.rbxcdn.com/180DAY-c0e2170ed1f85d4f9002293989d19691/768/432/Image/Png/noFilter"
+   "thumb": "assets/thumbs/9665201247.webp"
   },
   {
    "universeId": 8684640288,
@@ -279,7 +321,7 @@ window.SNAPSHOT = {
    "visits": 16391,
    "playing": 0,
    "favorites": 15,
-   "thumb": "https://tr.rbxcdn.com/180DAY-70b6215f0b2d6f238f4a5e64be72a19e/768/432/Image/Png/noFilter"
+   "thumb": "assets/thumbs/8684640288.webp"
   },
   {
    "universeId": 9897477160,
@@ -288,7 +330,7 @@ window.SNAPSHOT = {
    "visits": 14138,
    "playing": 0,
    "favorites": 66,
-   "thumb": "https://tr.rbxcdn.com/180DAY-2f15fd105749b36dee3940cf3a97892f/768/432/Image/Png/noFilter"
+   "thumb": "assets/thumbs/9897477160.webp"
   },
   {
    "universeId": 10771812020,
@@ -297,7 +339,7 @@ window.SNAPSHOT = {
    "visits": 13962,
    "playing": 0,
    "favorites": 178,
-   "thumb": "https://tr.rbxcdn.com/180DAY-be6bdb834c90f288016db8ece5382abb/768/432/Image/Png/noFilter"
+   "thumb": "assets/thumbs/10771812020.webp"
   },
   {
    "universeId": 10257555178,
@@ -306,7 +348,7 @@ window.SNAPSHOT = {
    "visits": 13462,
    "playing": 0,
    "favorites": 71,
-   "thumb": "https://tr.rbxcdn.com/180DAY-cdc028d0b9e8b1b51d9129e4da256794/768/432/Image/Png/noFilter"
+   "thumb": "assets/thumbs/10257555178.webp"
   },
   {
    "universeId": 8878100545,
@@ -315,7 +357,7 @@ window.SNAPSHOT = {
    "visits": 13330,
    "playing": 0,
    "favorites": 351,
-   "thumb": "https://tr.rbxcdn.com/180DAY-49b16815e34871140f7587765815c3c7/768/432/Image/Png/noFilter"
+   "thumb": "assets/thumbs/8878100545.webp"
   },
   {
    "universeId": 10768184152,
@@ -324,7 +366,7 @@ window.SNAPSHOT = {
    "visits": 12176,
    "playing": 0,
    "favorites": 47,
-   "thumb": "https://tr.rbxcdn.com/180DAY-120e5132939ab2056746d911a0352281/768/432/Image/Png/noFilter"
+   "thumb": "assets/thumbs/10768184152.webp"
   },
   {
    "universeId": 10766457988,
@@ -333,7 +375,7 @@ window.SNAPSHOT = {
    "visits": 10854,
    "playing": 0,
    "favorites": 59,
-   "thumb": "https://tr.rbxcdn.com/180DAY-c7abbbc54794d5f512825a2cf4e2b27b/768/432/Image/Png/noFilter"
+   "thumb": "assets/thumbs/10766457988.webp"
   },
   {
    "universeId": 8770927660,
@@ -342,7 +384,7 @@ window.SNAPSHOT = {
    "visits": 10226,
    "playing": 0,
    "favorites": 38,
-   "thumb": "https://tr.rbxcdn.com/180DAY-dc811448c4fe6e68055497b97d77e197/768/432/Image/Png/noFilter"
+   "thumb": "assets/thumbs/8770927660.webp"
   },
   {
    "universeId": 10154654970,
@@ -351,7 +393,7 @@ window.SNAPSHOT = {
    "visits": 258278,
    "playing": 0,
    "favorites": 564,
-   "thumb": "https://tr.rbxcdn.com/180DAY-c2f2d09b4b9d0b61ac70c7af7cd65037/768/432/Image/Png/noFilter"
+   "thumb": "assets/thumbs/10154654970.png"
   },
   {
    "universeId": 10486990560,
@@ -360,7 +402,7 @@ window.SNAPSHOT = {
    "visits": 233580,
    "playing": 0,
    "favorites": 4115,
-   "thumb": "https://tr.rbxcdn.com/180DAY-8e53e042050f1cadf862977586876c8d/768/432/Image/Png/noFilter"
+   "thumb": "assets/thumbs/10486990560.png"
   }
  ]
 };

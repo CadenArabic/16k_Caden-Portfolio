@@ -266,7 +266,8 @@ ul, ol { list-style: none; padding: 0; }
   padding: 6px 16px 6px 6px; border-radius: var(--r);
   border: 1px solid var(--border); background: var(--surface);
 }
-.loop__thumb { width: 72px; aspect-ratio: 16 / 9; border-radius: 10px; overflow: hidden; background: var(--surface-3); flex: none; }
+.loop__thumb { position: relative; width: 72px; aspect-ratio: 16 / 9; border-radius: 10px; overflow: hidden; background: var(--surface-3); flex: none; }
+.loop__thumb .thumb-fallback svg { width: 16px; height: 16px; }
 .loop__thumb img { width: 100%; height: 100%; object-fit: cover; }
 .loop__name { font-size: 14px; font-weight: 500; color: var(--text-2); white-space: nowrap; max-width: 260px; overflow: hidden; text-overflow: ellipsis; }
 

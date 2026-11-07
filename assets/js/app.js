@@ -21,7 +21,8 @@
   let lastUpdate = 0;
 
   const vars = () => R.tokens(C, stats && stats.totals);
-  const rows = () => R.gameRows(C, stats && stats.games);
+  const rows = () => R.sortRows(R.gameRows(C, stats && stats.games));
+  let gameOrder = "";
 
   /* ======================================================================
      Static content (the same markup tools/prerender.mjs bakes in)
@@ -52,12 +53,20 @@
     $("#contact-channels").innerHTML = R.channels(R.channelItems(C.contact));
   }
 
-  function renderGames() {
+  /* The hero deck and the strip are built once. The bento and grid follow the
+     live order (most players first), so they rebuild only when it changes. */
+  function renderGames(first) {
     const all = rows();
-    $("#swap").innerHTML = all.filter((g) => g.thumb).slice(0, SWAP_CARDS).map(R.swapCard).join("");
+    if (first) {
+      $("#swap").innerHTML = all.filter((g) => g.thumb).slice(0, SWAP_CARDS).map(R.swapCard).join("");
+      $("#loop").innerHTML = all.filter((g) => g.thumb).map(R.loopItem).join("");
+    }
+    const order = all.map((g) => g.id).join(",");
+    if (!first && order === gameOrder) { patchGames(); return; }
+    gameOrder = order;
     $("#games-featured").innerHTML = all.slice(0, FEATURED).map(R.featuredCard).join("");
     $("#games-grid").innerHTML = all.slice(FEATURED).map(R.gameCard).join("");
-    $("#loop").innerHTML = all.filter((g) => g.thumb).map(R.loopItem).join("");
+    if (!first) $$("#games-featured [data-reveal]").forEach((el) => el.removeAttribute("data-reveal"));
   }
 
   /* Live refreshes only patch numbers and thumbnails in place, so nothing
@@ -69,7 +78,7 @@
         el.textContent = R.compact(g.playing) + " playing";
         el.classList.toggle("badge--live", g.playing > 0);
       });
-      if (g.thumb) $$(`img[data-thumb="${g.id}"]`).forEach((img) => { if (img.src !== g.thumb) img.src = g.thumb; });
+      if (g.thumb) $$(`img[data-thumb="${g.id}"]`).forEach((img) => { if (img.getAttribute("src") !== g.thumb) img.src = g.thumb; });
     });
   }
 
@@ -108,7 +117,7 @@
     setPill(result.status);
     renderIdentity();
     $("#about-bio").innerHTML = R.bio(C.about.bio, vars());
-    patchGames();
+    renderGames(false);
     if (statsSeen) paintNumbers(true);
     lastUpdate = Date.now();
     setBind("updated", "just now");
@@ -287,11 +296,18 @@
     });
   }
 
-  /* Broken or blocked thumbnails fall back to a placeholder glyph. */
+  /* A thumbnail that fails gets one retry, then a placeholder glyph that stays
+     inside its own frame. */
   function initImgFallback() {
     document.addEventListener("error", (e) => {
       const img = e.target;
       if (!(img instanceof HTMLImageElement) || !img.dataset.thumb) return;
+      if (!img.dataset.retried) {
+        img.dataset.retried = "1";
+        const src = img.getAttribute("src");
+        setTimeout(() => { img.src = src; }, 1500);
+        return;
+      }
       const holder = img.parentElement;
       img.remove();
       if (holder && !holder.querySelector(".thumb-fallback")) holder.insertAdjacentHTML("afterbegin", `<span class="thumb-fallback">${R.icon("ic-cube")}</span>`);
@@ -307,7 +323,7 @@
     if (snap) stats = snap;
     renderIdentity();
     renderStatic();
-    renderGames();
+    renderGames(true);
     paintNumbers(false);
     primeNumbers();
 

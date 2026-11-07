@@ -80,6 +80,13 @@
 
   /* ---- Games ----------------------------------------------------------- */
 
+  /* Thumbnails saved by the prerender into assets/thumbs/ are served from this
+     site, so they load even when Roblox's image CDN is slow or blocked. */
+  const local = (id) => {
+    const snap = root.SNAPSHOT;
+    return snap && snap.thumbs && snap.thumbs[id] ? snap.thumbs[id] : null;
+  };
+
   function gameRows(config, liveGames) {
     const byId = {};
     (liveGames || []).forEach((g) => (byId[g.universeId] = g));
@@ -93,13 +100,22 @@
         visits: l.visits != null ? l.visits : fb.visits,
         playing: cfg.closed ? null : (l.playing != null ? l.playing : fb.playing),
         favorites: l.favorites != null ? l.favorites : fb.favorites,
-        thumb: l.thumb || cfg.thumb || null,
+        thumb: local(cfg.universeId) || l.thumb || cfg.thumb || null,
         role: cfg.role || "",
         contribution: cfg.contribution || "",
         closed: Boolean(cfg.closed),
         url: placeId && !cfg.closed ? "https://www.roblox.com/games/" + placeId : null,
       };
     });
+  }
+
+  /* Order: games with players online first (most players on top), then the
+     rest by visits, and closed games at the very end. */
+  function sortRows(rows) {
+    return rows.slice().sort((a, b) =>
+      (a.closed - b.closed) ||
+      ((b.playing || 0) - (a.playing || 0)) ||
+      ((b.visits || 0) - (a.visits || 0)));
   }
 
   const thumb = (g, eager) => g.thumb
@@ -227,7 +243,7 @@
 
   root.Render = {
     esc, icon, compact, full, short, plus, fill, emphasise, tokens,
-    bio, skills, process, gameRows, featuredCard, gameCard, swapCard, loopItem, bars,
+    bio, skills, process, gameRows, sortRows, featuredCard, gameCard, swapCard, loopItem, bars,
     media, channelItems, channels, pricing,
   };
 })(typeof window !== "undefined" ? window : globalThis);

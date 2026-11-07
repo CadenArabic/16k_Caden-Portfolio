@@ -26,6 +26,12 @@
       ]
     },
     {
+      "source": "/assets/thumbs/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=3600, stale-while-revalidate=86400" }
+      ]
+    },
+    {
       "source": "/assets/media/(.*)",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=86400" }

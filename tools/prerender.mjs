@@ -59,7 +59,7 @@ async function fetchGames(ids) {
     const details = await fromHosts((h) => `${h.games}/v1/games?universeIds=${chunk}`);
     const thumbs = await fromHosts((h) =>
       `${h.thumbs}/v1/games/multiget/thumbnails?universeIds=${chunk}` +
-      `&countPerUniverse=1&defaults=true&size=768x432&format=Png&isCircular=false`);
+      `&countPerUniverse=1&defaults=true&size=576x324&format=Webp&isCircular=false`);
     const thumbMap = {};
     (thumbs.data || []).forEach((e) => {
       const t = (e.thumbnails || [])[0];
@@ -96,6 +96,44 @@ if (missing.length) {
   console.warn("Using saved numbers for games Roblox no longer reports:", missing.join(", "));
 }
 
+/* Save every thumbnail into assets/thumbs/ so the site serves its own images
+   instead of hotlinking Roblox's CDN (which can be slow or blocked). A failed
+   download keeps the file from the last run. */
+async function getBytes(url) {
+  for (let i = 0; i < 4; i++) {
+    try {
+      const res = await fetch(url);
+      if (res.ok) return Buffer.from(await res.arrayBuffer());
+    } catch (_) { /* retry */ }
+    await new Promise((r) => setTimeout(r, 1000 * (i + 1)));
+  }
+  return null;
+}
+
+const thumbDir = file("assets/thumbs");
+await fs.mkdir(thumbDir, { recursive: true });
+const existing = new Set(await fs.readdir(thumbDir));
+const thumbs = {};
+for (const g of games) {
+  const remote = g.thumb || (C.games.find((c) => c.universeId === g.universeId) || {}).thumb;
+  const ext = remote && /\/Webp\//i.test(remote) ? "webp" : "png";
+  const name = `${g.universeId}.${ext}`;
+  const bytes = remote && /^https?:/.test(remote) ? await getBytes(remote) : null;
+  if (bytes) {
+    for (const old of existing) if (old.startsWith(g.universeId + ".") && old !== name) await fs.rm(path.join(thumbDir, old));
+    await fs.writeFile(path.join(thumbDir, name), bytes);
+    thumbs[g.universeId] = `assets/thumbs/${name}`;
+  } else {
+    const kept = [...existing].find((f) => f.startsWith(g.universeId + "."));
+    if (kept) thumbs[g.universeId] = `assets/thumbs/${kept}`;
+    else console.warn("No thumbnail for", g.universeId, g.name);
+  }
+}
+const wanted = new Set(C.games.map((g) => String(g.universeId)));
+for (const f of existing) if (!wanted.has(f.split(".")[0])) await fs.rm(path.join(thumbDir, f));
+games.forEach((g) => { if (thumbs[g.universeId]) g.thumb = thumbs[g.universeId]; });
+ctx.SNAPSHOT = { thumbs };
+
 const totals = games.reduce((t, g) => ({
   visits: t.visits + g.visits, playing: t.playing + g.playing,
   favorites: t.favorites + g.favorites, count: t.count + 1,
@@ -103,7 +141,7 @@ const totals = games.reduce((t, g) => ({
 
 await fs.writeFile(file("assets/js/snapshot.js"),
   "/* Written by tools/prerender.mjs. Last known numbers, painted before the live fetch. */\n" +
-  `window.SNAPSHOT = ${JSON.stringify({ at: new Date().toISOString(), games }, null, 1)};\n`);
+  `window.SNAPSHOT = ${JSON.stringify({ at: new Date().toISOString(), thumbs, games }, null, 1)};\n`);
 
 const id = C.identity;
 const vars = R.tokens(C, totals);
@@ -147,8 +185,9 @@ bindTo("games-count", String(C.games.length));
 bindTo("response-time", R.esc(C.contact.responseTime || ""));
 bindTo("contact-lede", R.esc(C.contact.lede || ""));
 
-/* Same slices as app.js: 4 cards in the hero deck, 5 in the bento, the rest in the grid. */
-const rows = R.gameRows(C, games);
+/* Same order and slices as app.js: most players first, then visits, closed
+   last; 4 cards in the hero deck, 5 in the bento, the rest in the grid. */
+const rows = R.sortRows(R.gameRows(C, games));
 region("swap", rows.filter((g) => g.thumb).slice(0, 4).map(R.swapCard).join(""));
 region("loop", rows.filter((g) => g.thumb).map(R.loopItem).join(""));
 region("featured", rows.slice(0, 5).map(R.featuredCard).join(""));

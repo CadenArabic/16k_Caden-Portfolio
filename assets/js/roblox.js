@@ -12,7 +12,7 @@
 window.RobloxStats = (function () {
   "use strict";
 
-  const CACHE_KEY = "rbx-portfolio-stats-v1";
+  const CACHE_KEY = "rbx-portfolio-stats-v2";
   const TIMEOUT_MS = 8000;
 
   /* ---- helpers --------------------------------------------------------- */
@@ -44,7 +44,7 @@ window.RobloxStats = (function () {
       const parsed = JSON.parse(raw);
       if (parsed.key !== configuredIds().join(",")) return null;   // games changed
       const ageMin = (Date.now() - parsed.at) / 60000;
-      return { ...parsed, stale: ageMin > (window.CONFIG.api.cacheMinutes || 10) };
+      return { ...parsed, games: withFallbacks(parsed.games || []), stale: ageMin > (window.CONFIG.api.cacheMinutes || 10) };
     } catch (_) {
       return null;
     }
