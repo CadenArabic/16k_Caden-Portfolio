@@ -1,6 +1,6 @@
 /* Written by tools/prerender.mjs. Last known numbers, painted before the live fetch. */
 window.SNAPSHOT = {
- "at": "2026-11-07T00:18:40.823Z",
+ "at": "2026-11-07T12:24:15.402Z",
  "thumbs": {
   "2576960132": "assets/thumbs/2576960132.webp",
   "2778824421": "assets/thumbs/2778824421.webp",
@@ -48,16 +48,16 @@ window.SNAPSHOT = {
    "universeId": 9160234761,
    "rootPlaceId": 78758085598611,
    "name": "Dangerous RV Driving",
-   "visits": 7242402,
-   "playing": 5,
-   "favorites": 10902,
+   "visits": 7243130,
+   "playing": 12,
+   "favorites": 10905,
    "thumb": "assets/thumbs/9160234761.webp"
   },
   {
    "universeId": 8865934317,
    "rootPlaceId": 111392584461873,
    "name": "Bubble Wrap ASMR Tower [🎵]",
-   "visits": 4848549,
+   "visits": 4848594,
    "playing": 0,
    "favorites": 11283,
    "thumb": "assets/thumbs/8865934317.webp"
@@ -66,9 +66,9 @@ window.SNAPSHOT = {
    "universeId": 9488122827,
    "rootPlaceId": 118638953131946,
    "name": "Four in a Row!",
-   "visits": 2408223,
-   "playing": 15,
-   "favorites": 6864,
+   "visits": 2409611,
+   "playing": 3,
+   "favorites": 6869,
    "thumb": "assets/thumbs/9488122827.webp"
   },
   {
@@ -84,8 +84,8 @@ window.SNAPSHOT = {
    "universeId": 9508198844,
    "rootPlaceId": 124101752948502,
    "name": "Escape Tsunami on Jetpack!",
-   "visits": 1060432,
-   "playing": 1,
+   "visits": 1060466,
+   "playing": 0,
    "favorites": 2375,
    "thumb": "assets/thumbs/9508198844.webp"
   },
@@ -102,8 +102,8 @@ window.SNAPSHOT = {
    "universeId": 9684216326,
    "rootPlaceId": 82573717400450,
    "name": "Minecart Ride",
-   "visits": 665634,
-   "playing": 0,
+   "visits": 665648,
+   "playing": 1,
    "favorites": 1201,
    "thumb": "assets/thumbs/9684216326.webp"
   },
@@ -129,9 +129,9 @@ window.SNAPSHOT = {
    "universeId": 10143449522,
    "rootPlaceId": 101931368733728,
    "name": "Scary Pizzeria: ANOMALIES [HORROR]",
-   "visits": 538103,
-   "playing": 5,
-   "favorites": 5306,
+   "visits": 538781,
+   "playing": 4,
+   "favorites": 5313,
    "thumb": "assets/thumbs/10143449522.webp"
   },
   {
@@ -156,9 +156,9 @@ window.SNAPSHOT = {
    "universeId": 9715259353,
    "rootPlaceId": 116990588746086,
    "name": "Escape Falling Stairs for Brainrot",
-   "visits": 193174,
+   "visits": 193178,
    "playing": 0,
-   "favorites": 14382,
+   "favorites": 14383,
    "thumb": "assets/thumbs/9715259353.webp"
   },
   {
@@ -201,9 +201,9 @@ window.SNAPSHOT = {
    "universeId": 10023401715,
    "rootPlaceId": 121627323638824,
    "name": "Bow for Lucky Blocks",
-   "visits": 78921,
+   "visits": 78961,
    "playing": 0,
-   "favorites": 4720,
+   "favorites": 4723,
    "thumb": "assets/thumbs/10023401715.webp"
   },
   {
@@ -219,9 +219,9 @@ window.SNAPSHOT = {
    "universeId": 10770035099,
    "rootPlaceId": 102399059182565,
    "name": "Chop a Lucky Nest",
-   "visits": 59609,
-   "playing": 39,
-   "favorites": 237,
+   "visits": 63993,
+   "playing": 117,
+   "favorites": 248,
    "thumb": "assets/thumbs/10770035099.webp"
   },
   {
@@ -255,7 +255,7 @@ window.SNAPSHOT = {
    "universeId": 9700383470,
    "rootPlaceId": 119317336392339,
    "name": "[Update 2] +1 Speed Noob Escape",
-   "visits": 45142,
+   "visits": 45143,
    "playing": 0,
    "favorites": 4239,
    "thumb": "assets/thumbs/9700383470.webp"
@@ -264,7 +264,7 @@ window.SNAPSHOT = {
    "universeId": 9551152786,
    "rootPlaceId": 83830555014105,
    "name": "Escape Tsunami to Steal Waifus 🌊",
-   "visits": 40978,
+   "visits": 40979,
    "playing": 0,
    "favorites": 41,
    "thumb": "assets/thumbs/9551152786.webp"
@@ -273,16 +273,16 @@ window.SNAPSHOT = {
    "universeId": 10768217698,
    "rootPlaceId": 97827991493021,
    "name": "Feed the Creature",
-   "visits": 36489,
-   "playing": 12,
-   "favorites": 103,
+   "visits": 39756,
+   "playing": 39,
+   "favorites": 109,
    "thumb": "assets/thumbs/10768217698.webp"
   },
   {
    "universeId": 10766728783,
    "rootPlaceId": 105756703188805,
    "name": "[RELEASE] Sort the Ducks",
-   "visits": 27567,
+   "visits": 27570,
    "playing": 0,
    "favorites": 246,
    "thumb": "assets/thumbs/10766728783.webp"
@@ -336,7 +336,7 @@ window.SNAPSHOT = {
    "universeId": 10771812020,
    "rootPlaceId": 97330213338981,
    "name": "Woodmaker",
-   "visits": 13962,
+   "visits": 13974,
    "playing": 0,
    "favorites": 178,
    "thumb": "assets/thumbs/10771812020.webp"
@@ -363,7 +363,7 @@ window.SNAPSHOT = {
    "universeId": 10768184152,
    "rootPlaceId": 130237662544324,
    "name": "Waterslide Race",
-   "visits": 12176,
+   "visits": 12180,
    "playing": 0,
    "favorites": 47,
    "thumb": "assets/thumbs/10768184152.webp"
@@ -372,8 +372,8 @@ window.SNAPSHOT = {
    "universeId": 10766457988,
    "rootPlaceId": 126242985657410,
    "name": "Sail to Steal Eggs",
-   "visits": 10854,
-   "playing": 0,
+   "visits": 10877,
+   "playing": 1,
    "favorites": 59,
    "thumb": "assets/thumbs/10766457988.webp"
   },

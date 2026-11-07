@@ -33,7 +33,7 @@ window.CONFIG = {
      ------------------------------------------------------------------ */
   contact: {
     lede:          "Tell me what you need on Discord. I'll say if I can do it and when I can start.",
-    discord:       "caden._.arabic",
+    discord:       "16k_Caden",
     discordServer: "",                          // optional invite URL
     x:             "Caden__Pro",
     talentHub:     { label: "16k_Caden", url: "https://create.roblox.com/talent/creators/867951875" },
