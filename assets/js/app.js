@@ -49,6 +49,7 @@
     $("#about-skills").innerHTML = R.skills(C.about.skills);
     $("#about-process").innerHTML = R.process(C.about.process);
     $("#media-grid").innerHTML = R.media(C.media);
+    $("#gallery-grid").innerHTML = R.gallery(C.gallery);
     $("#contact-pricing").innerHTML = R.pricing(C.pricing);
     $("#contact-channels").innerHTML = R.channels(R.channelItems(C.contact));
   }
@@ -228,14 +229,15 @@
   }
 
   /* ======================================================================
-     Lightbox for clips
+     Lightbox for clips and the builds gallery
      =================================================================== */
 
-  let lbIndex = 0, lbLastFocus = null;
+  let lbIndex = 0, lbLastFocus = null, lbItems = [];
 
-  function openLightbox(i) {
-    const items = C.media || [];
-    if (!items.length) return;
+  function openLightbox(items, i) {
+    lbItems = items || [];
+    if (!lbItems.length) return;
+    items = lbItems;
     lbIndex = ((i % items.length) + items.length) % items.length;
     lbLastFocus = document.activeElement;
     const lb = $("#lightbox");
@@ -247,7 +249,7 @@
   }
 
   function paintLightbox() {
-    const items = C.media || [];
+    const items = lbItems;
     const m = items[lbIndex];
     const frame = $("#lightbox-frame");
     if (m.type === "youtube") {
@@ -272,10 +274,14 @@
   }
 
   function initLightbox() {
-    const step = (d) => { const n = (C.media || []).length; lbIndex = (((lbIndex + d) % n) + n) % n; paintLightbox(); };
+    const step = (d) => { const n = lbItems.length; if (!n) return; lbIndex = (((lbIndex + d) % n) + n) % n; paintLightbox(); };
+    const shots = () => (C.gallery || []).map((g) => ({ type: "image", src: g.src, title: g.title, caption: g.caption }));
     document.addEventListener("click", (e) => {
-      const tile = e.target.closest && e.target.closest("[data-media]");
-      if (tile) openLightbox(Number(tile.dataset.media));
+      if (!e.target.closest) return;
+      const clip = e.target.closest("[data-media]");
+      if (clip) { openLightbox(C.media, Number(clip.dataset.media)); return; }
+      const shot = e.target.closest("[data-gallery]");
+      if (shot) openLightbox(shots(), Number(shot.dataset.gallery));
     });
     $("#lightbox-close").addEventListener("click", closeLightbox);
     $("#lightbox-prev").addEventListener("click", () => step(-1));

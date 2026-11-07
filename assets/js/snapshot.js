@@ -1,6 +1,6 @@
 /* Written by tools/prerender.mjs. Last known numbers, painted before the live fetch. */
 window.SNAPSHOT = {
- "at": "2026-11-07T12:24:15.402Z",
+ "at": "2026-11-07T12:39:08.553Z",
  "thumbs": {
   "2576960132": "assets/thumbs/2576960132.webp",
   "2778824421": "assets/thumbs/2778824421.webp",
@@ -48,8 +48,8 @@ window.SNAPSHOT = {
    "universeId": 9160234761,
    "rootPlaceId": 78758085598611,
    "name": "Dangerous RV Driving",
-   "visits": 7243130,
-   "playing": 12,
+   "visits": 7243154,
+   "playing": 9,
    "favorites": 10905,
    "thumb": "assets/thumbs/9160234761.webp"
   },
@@ -58,7 +58,7 @@ window.SNAPSHOT = {
    "rootPlaceId": 111392584461873,
    "name": "Bubble Wrap ASMR Tower [🎵]",
    "visits": 4848594,
-   "playing": 0,
+   "playing": 1,
    "favorites": 11283,
    "thumb": "assets/thumbs/8865934317.webp"
   },
@@ -66,8 +66,8 @@ window.SNAPSHOT = {
    "universeId": 9488122827,
    "rootPlaceId": 118638953131946,
    "name": "Four in a Row!",
-   "visits": 2409611,
-   "playing": 3,
+   "visits": 2409616,
+   "playing": 7,
    "favorites": 6869,
    "thumb": "assets/thumbs/9488122827.webp"
   },
@@ -102,8 +102,8 @@ window.SNAPSHOT = {
    "universeId": 9684216326,
    "rootPlaceId": 82573717400450,
    "name": "Minecart Ride",
-   "visits": 665648,
-   "playing": 1,
+   "visits": 665650,
+   "playing": 0,
    "favorites": 1201,
    "thumb": "assets/thumbs/9684216326.webp"
   },
@@ -129,8 +129,8 @@ window.SNAPSHOT = {
    "universeId": 10143449522,
    "rootPlaceId": 101931368733728,
    "name": "Scary Pizzeria: ANOMALIES [HORROR]",
-   "visits": 538781,
-   "playing": 4,
+   "visits": 538792,
+   "playing": 7,
    "favorites": 5313,
    "thumb": "assets/thumbs/10143449522.webp"
   },
@@ -219,9 +219,9 @@ window.SNAPSHOT = {
    "universeId": 10770035099,
    "rootPlaceId": 102399059182565,
    "name": "Chop a Lucky Nest",
-   "visits": 63993,
-   "playing": 117,
-   "favorites": 248,
+   "visits": 64121,
+   "playing": 122,
+   "favorites": 249,
    "thumb": "assets/thumbs/10770035099.webp"
   },
   {
@@ -273,8 +273,8 @@ window.SNAPSHOT = {
    "universeId": 10768217698,
    "rootPlaceId": 97827991493021,
    "name": "Feed the Creature",
-   "visits": 39756,
-   "playing": 39,
+   "visits": 39873,
+   "playing": 33,
    "favorites": 109,
    "thumb": "assets/thumbs/10768217698.webp"
   },
@@ -372,8 +372,8 @@ window.SNAPSHOT = {
    "universeId": 10766457988,
    "rootPlaceId": 126242985657410,
    "name": "Sail to Steal Eggs",
-   "visits": 10877,
-   "playing": 1,
+   "visits": 10880,
+   "playing": 0,
    "favorites": 59,
    "thumb": "assets/thumbs/10766457988.webp"
   },

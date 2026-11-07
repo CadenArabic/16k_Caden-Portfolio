@@ -196,6 +196,7 @@ region("bio", R.bio(C.about.bio, vars));
 region("skills", R.skills(C.about.skills));
 region("process", R.process(C.about.process));
 region("media", R.media(C.media));
+region("gallery", R.gallery(C.gallery));
 region("pricing", R.pricing(C.pricing));
 region("channels", R.channels(R.channelItems(C.contact)));
 

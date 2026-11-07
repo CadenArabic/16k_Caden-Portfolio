@@ -190,6 +190,18 @@
   };
   const media = (items) => (items || []).map(mediaTile).join("");
 
+  /* Builds & models: a bento of screenshots, caption under each image. */
+  const shot = (s, i) => `
+      <button class="shot spot${s.size ? " shot--" + esc(s.size) : ""}${s.right ? " shot--right" : ""}" data-gallery="${i}" data-reveal style="--d:${i % 3}" aria-label="View ${esc(s.title)}">
+        <span class="shot__media"><img src="${esc(s.src)}" alt="${esc(s.title)}" loading="lazy" width="1280" height="720"></span>
+        <span class="shot__body">
+          <span class="shot__tag">${esc(s.tag || "")}</span>
+          <span class="shot__title">${esc(s.title)}</span>
+          ${s.caption ? `<span class="shot__caption">${esc(s.caption)}</span>` : ""}
+        </span>
+      </button>`;
+  const gallery = (items) => (items || []).map(shot).join("");
+
   /* ---- Contact --------------------------------------------------------- */
 
   function channelItems(c) {
@@ -244,6 +256,6 @@
   root.Render = {
     esc, icon, compact, full, short, plus, fill, emphasise, tokens,
     bio, skills, process, gameRows, sortRows, featuredCard, gameCard, swapCard, loopItem, bars,
-    media, channelItems, channels, pricing,
+    media, gallery, channelItems, channels, pricing,
   };
 })(typeof window !== "undefined" ? window : globalThis);

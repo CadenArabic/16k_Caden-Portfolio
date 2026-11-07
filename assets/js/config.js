@@ -176,6 +176,30 @@ window.CONFIG = {
   ],
 
   /* ---------------------------------------------------------------------
+     5b. BUILDS & MODELS — screenshots of maps, models and UI you made.
+     Images live in assets/gallery/. tag is one word (Building, Modeling,
+     UI, Gameplay). size: "big" is a 2x2 tile with the next two small tiles
+     stacked beside it (right: true puts it on the right); size: "full" is a
+     full-width banner. Keep that pattern so the grid has no holes.
+     ------------------------------------------------------------------ */
+  gallery: [
+    { src: "assets/gallery/hammer-hub.webp", size: "big", tag: "Building",
+      title: "+1 Hammer Throw: hub", caption: "Stud-style hub with training lanes, hammer shop pads, egg stage and stadium." },
+    { src: "assets/gallery/megalodon-v3.webp", tag: "Modeling",
+      title: "Megalodon V3", caption: "Remade in Blender on the original rig, so every in-game animation still works." },
+    { src: "assets/gallery/eel-v3.webp", tag: "Modeling",
+      title: "Eel V3", caption: "Voxel eel with glowing markings, rigged and animated for Feed the Creature." },
+    { src: "assets/gallery/hammer-field.webp", size: "big", right: true, tag: "Building",
+      title: "+1 Hammer Throw: field", caption: "2,000-stud throwing field split into themed distance zones." },
+    { src: "assets/gallery/ftc-harbor.webp", tag: "Gameplay",
+      title: "Feed the Creature: harbor", caption: "Boats, crate piles, shops and NPC workers I scripted on the harbor." },
+    { src: "assets/gallery/ftc-training-island.webp", tag: "Gameplay",
+      title: "Feed the Creature: training", caption: "Crane training system with level-ups and strength multipliers." },
+    { src: "assets/gallery/ftc-hud.webp", size: "full", tag: "UI",
+      title: "Feed the Creature: HUD", caption: "Feed bar, stat rows, food packs, shop and boosts, with the cargo bar." },
+  ],
+
+  /* ---------------------------------------------------------------------
      6. MEDIA — videos and images of your work.
      type: "image"   → src = path or URL to an image
      type: "youtube" → src = the video ID only (e.g. "dQw4w9WgXcQ")
