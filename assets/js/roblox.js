@@ -111,7 +111,7 @@ window.RobloxStats = (function () {
       });
     } catch (_) { /* keep going without art */ }
 
-    return details.data.map((g) => ({
+    return details.data.filter((g) => g.id > 0).map((g) => ({
       universeId: g.id,
       rootPlaceId: g.rootPlaceId,
       name: g.name,
@@ -120,6 +120,20 @@ window.RobloxStats = (function () {
       favorites: g.favoritedCount || 0,
       thumb: thumbMap[g.id] || null,
     }));
+  }
+
+  /* A game Roblox stopped reporting (taken down, under review) keeps the
+     numbers saved in its config `fallback`, so the totals don't drop. */
+  function withFallbacks(games) {
+    const have = new Set(games.map((g) => g.universeId));
+    const extra = (window.CONFIG.games || [])
+      .filter((g) => g.fallback && !have.has(g.universeId))
+      .map((g) => ({
+        universeId: g.universeId, rootPlaceId: g.placeId || null,
+        name: g.fallback.name, visits: g.fallback.visits || 0, playing: 0,
+        favorites: g.fallback.favorites || 0, thumb: g.thumb || null,
+      }));
+    return games.concat(extra);
   }
 
   /* ---- public API ------------------------------------------------------ */
@@ -140,7 +154,7 @@ window.RobloxStats = (function () {
 
     for (const host of window.CONFIG.api.hosts) {
       try {
-        const games = await fetchFromHost(host, ids);
+        const games = withFallbacks(await fetchFromHost(host, ids));
         if (games.length) {
           writeCache(games);
           return { games, totals: totalsOf(games), status: "live" };

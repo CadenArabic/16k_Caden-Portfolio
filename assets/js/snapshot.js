@@ -1,12 +1,12 @@
 /* Written by tools/prerender.mjs. Last known numbers, painted before the live fetch. */
 window.SNAPSHOT = {
- "at": "2026-11-07T00:10:32.923Z",
+ "at": "2026-11-07T00:11:42.571Z",
  "games": [
   {
    "universeId": 9160234761,
    "rootPlaceId": 78758085598611,
    "name": "Dangerous RV Driving",
-   "visits": 7242384,
+   "visits": 7242388,
    "playing": 7,
    "favorites": 10902,
    "thumb": "https://tr.rbxcdn.com/180DAY-66123c67454e98332e6269c109680232/768/432/Image/Png/noFilter"
@@ -24,8 +24,8 @@ window.SNAPSHOT = {
    "universeId": 9488122827,
    "rootPlaceId": 118638953131946,
    "name": "Four in a Row!",
-   "visits": 2408206,
-   "playing": 16,
+   "visits": 2408211,
+   "playing": 14,
    "favorites": 6864,
    "thumb": "https://tr.rbxcdn.com/180DAY-957ab6cf4e43c4fcacb3991bacd5a223/768/432/Image/Png/noFilter"
   },
@@ -87,8 +87,8 @@ window.SNAPSHOT = {
    "universeId": 10143449522,
    "rootPlaceId": 101931368733728,
    "name": "Scary Pizzeria: ANOMALIES [HORROR]",
-   "visits": 538096,
-   "playing": 4,
+   "visits": 538097,
+   "playing": 8,
    "favorites": 5306,
    "thumb": "https://tr.rbxcdn.com/180DAY-01387424882b242d288a8f8117c17711/768/432/Image/Png/noFilter"
   },
@@ -109,24 +109,6 @@ window.SNAPSHOT = {
    "playing": 0,
    "favorites": 24480,
    "thumb": "https://tr.rbxcdn.com/180DAY-92fb7e33fac72b18e4b69378d48812f7/768/432/Image/Png/noFilter"
-  },
-  {
-   "universeId": 0,
-   "rootPlaceId": 0,
-   "name": "[TITLE UNAVAILABLE]",
-   "visits": 0,
-   "playing": 0,
-   "favorites": 0,
-   "thumb": null
-  },
-  {
-   "universeId": 0,
-   "rootPlaceId": 0,
-   "name": "[TITLE UNAVAILABLE]",
-   "visits": 0,
-   "playing": 0,
-   "favorites": 0,
-   "thumb": null
   },
   {
    "universeId": 9715259353,
@@ -195,8 +177,8 @@ window.SNAPSHOT = {
    "universeId": 10770035099,
    "rootPlaceId": 102399059182565,
    "name": "Chop a Lucky Nest",
-   "visits": 59583,
-   "playing": 41,
+   "visits": 59590,
+   "playing": 38,
    "favorites": 237,
    "thumb": "https://tr.rbxcdn.com/180DAY-6923bda5072e68ad49021fc5fbe828a1/768/432/Image/Png/noFilter"
   },
@@ -249,8 +231,8 @@ window.SNAPSHOT = {
    "universeId": 10768217698,
    "rootPlaceId": 97827991493021,
    "name": "Feed the Creature",
-   "visits": 36459,
-   "playing": 15,
+   "visits": 36464,
+   "playing": 18,
    "favorites": 103,
    "thumb": "https://tr.rbxcdn.com/180DAY-6082034aaeecb829d0b3ffbf21fae8df/768/432/Image/Png/noFilter"
   },
@@ -361,6 +343,24 @@ window.SNAPSHOT = {
    "playing": 0,
    "favorites": 38,
    "thumb": "https://tr.rbxcdn.com/180DAY-dc811448c4fe6e68055497b97d77e197/768/432/Image/Png/noFilter"
+  },
+  {
+   "universeId": 10154654970,
+   "rootPlaceId": 71178322219919,
+   "name": "Roll in a Minecart",
+   "visits": 258278,
+   "playing": 0,
+   "favorites": 564,
+   "thumb": "https://tr.rbxcdn.com/180DAY-c2f2d09b4b9d0b61ac70c7af7cd65037/768/432/Image/Png/noFilter"
+  },
+  {
+   "universeId": 10486990560,
+   "rootPlaceId": 73834606570962,
+   "name": "+1 Speed Rock Cave Escape",
+   "visits": 233580,
+   "playing": 0,
+   "favorites": 4115,
+   "thumb": "https://tr.rbxcdn.com/180DAY-8e53e042050f1cadf862977586876c8d/768/432/Image/Png/noFilter"
   }
  ]
 };

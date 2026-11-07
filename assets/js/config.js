@@ -113,10 +113,14 @@ window.CONFIG = {
       contribution: "Buy, steal and defend celebrities: bases, income and fame upgrades." },   // Steal a Celebrity
     { universeId: 9889664408, placeId: 97071633125628, role: "Scripter",
       contribution: "Shrink zones, lucky block rolls, guard AI and brainrot upgrades." },   // Shrink for Lucky Blocks
-    { universeId: 10154654970, placeId: 71178322219919, role: "Scripter",
-      contribution: "Shopping cart physics with brakes, obstacles and crash effects." },   // Roll in a Minecart
-    { universeId: 10486990560, placeId: 73834606570962, role: "Scripter",
-      contribution: "+1 speed per step, multipliers, races and rock smashing." },   // +1 Speed Rock Cave Escape
+    { universeId: 10154654970, placeId: 71178322219919, role: "Scripter", closed: true,
+      thumb: "https://tr.rbxcdn.com/180DAY-c2f2d09b4b9d0b61ac70c7af7cd65037/768/432/Image/Png/noFilter",
+      fallback: { name: "Roll in a Minecart", visits: 258278, favorites: 564 },
+      contribution: "Shopping cart physics with brakes, obstacles and crash effects." },   // Roll in a Minecart (unavailable since 2026-11-07)
+    { universeId: 10486990560, placeId: 73834606570962, role: "Scripter", closed: true,
+      thumb: "https://tr.rbxcdn.com/180DAY-8e53e042050f1cadf862977586876c8d/768/432/Image/Png/noFilter",
+      fallback: { name: "+1 Speed Rock Cave Escape", visits: 233580, favorites: 4115 },
+      contribution: "+1 speed per step, multipliers, races and rock smashing." },   // +1 Speed Rock Cave Escape (unavailable since 2026-11-07)
     { universeId: 9715259353, placeId: 116990588746086, role: "Scripter",
       contribution: "Collapsing staircase, brainrot income and the speed shop." },   // Escape Falling Stairs for Brainrot
     { universeId: 9858955445, placeId: 124513042683021, role: "Scripter",

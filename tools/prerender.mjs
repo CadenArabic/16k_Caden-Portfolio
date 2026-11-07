@@ -65,7 +65,7 @@ async function fetchGames(ids) {
       const t = (e.thumbnails || [])[0];
       if (t && t.state === "Completed") thumbMap[e.universeId] = t.imageUrl;
     });
-    details.data.forEach((g) => out.push({
+    details.data.filter((g) => g.id > 0).forEach((g) => out.push({
       universeId: g.id,
       rootPlaceId: g.rootPlaceId,
       name: g.name,
@@ -82,7 +82,19 @@ async function fetchGames(ids) {
 const ids = C.games.map((g) => g.universeId);
 const games = await fetchGames(ids);
 const missing = ids.filter((id) => !games.some((g) => g.universeId === id));
-if (missing.length) console.warn("No data for universe IDs:", missing.join(", "));
+if (missing.length) {
+  const noFallback = missing.filter((id) => !C.games.find((g) => g.universeId === id).fallback);
+  if (noFallback.length) {
+    console.error("Roblox returned nothing for these games and they have no `fallback` in config.js:",
+      noFallback.join(", "), "\nGive each one closed: true plus fallback { name, visits }, then run this again.");
+    process.exit(1);
+  }
+  C.games.filter((g) => missing.includes(g.universeId)).forEach((g) => games.push({
+    universeId: g.universeId, rootPlaceId: g.placeId || null, name: g.fallback.name,
+    visits: g.fallback.visits || 0, playing: 0, favorites: g.fallback.favorites || 0, thumb: g.thumb || null,
+  }));
+  console.warn("Using saved numbers for games Roblox no longer reports:", missing.join(", "));
+}
 
 const totals = games.reduce((t, g) => ({
   visits: t.visits + g.visits, playing: t.playing + g.playing,
